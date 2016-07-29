@@ -26,7 +26,7 @@
       <dependency id="RestSharp" version="104.1" />
       <!--<dependency id="Twilio" version="3.6.10"  />-->
       <dependency id="DotNetZip" version="1.9.2"  />
-      <dependency id="Newtonsoft.Json" version="8.0.0"  />
+      <!--<dependency id="Newtonsoft.Json" version="9.0.0"  />-->
     </dependencies>
   </metadata>
   <files>
