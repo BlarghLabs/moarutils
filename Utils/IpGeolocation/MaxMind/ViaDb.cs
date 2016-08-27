@@ -84,6 +84,7 @@ namespace MoarUtils.Utils.IpGeolocation.Maxmind {
       }
     }
 
+
     public static string GetOrg(string ip, bool throwOnError = false) {
       try {
         var r = maxmindIspDr.Isp(ip);
@@ -104,6 +105,29 @@ namespace MoarUtils.Utils.IpGeolocation.Maxmind {
         return r.Isp;
       } catch (Exception ex) {
         LogIt.W(ip + "|" + ex.Message);
+        if (throwOnError) {
+          throw ex;
+        } else {
+          return null;
+        }
+      }
+    }
+
+    public static string GetCountryName(
+      string ip, 
+      bool throwOnError = false, 
+      bool doNotWarnOnNotInDb = true
+    ) {
+      try {
+        var cr = maxmindDr.City(ip);
+        //LogIt.D(or.Country.IsoCode + "|" + or.City.Name);
+        return cr.Country.Name;
+      } catch (Exception ex) {
+        if (doNotWarnOnNotInDb && ex.Message.Contains("is not in the database")) {
+          //LogIt.W(ip + "|" + ex.Message);        
+        } else {
+          LogIt.W(ip + "|" + ex.Message);
+        }
         if (throwOnError) {
           throw ex;
         } else {

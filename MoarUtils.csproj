@@ -201,6 +201,7 @@
     <Compile Include="Enums\DesiredProxyType.cs" />
     <Compile Include="Enums\GeocodeSource.cs" />
     <Compile Include="Enums\UserMsgFormat.cs" />
+    <Compile Include="filters\AccessDeniedAuthorizeAttribute.cs" />
     <Compile Include="filters\AjaxAuthorizeAttribute.cs" />
     <Compile Include="filters\EmptyLinesRemover.cs" />
     <Compile Include="filters\Compress.cs" />
@@ -278,8 +279,10 @@
     <Compile Include="Utils\Strings.cs" />
     <Compile Include="Utils\Validation\EmailValidation.cs" />
     <Compile Include="Utils\Validation\PhoneNumberValidation.cs" />
+    <Compile Include="Utils\Web\ConvertUrlsToLinks.cs" />
     <Compile Include="Utils\Web\GetPublicIp.cs" />
     <Compile Include="Utils\Web\IsIOSDevice.cs" />
+    <Compile Include="Utils\Web\LogHttpHeaders.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

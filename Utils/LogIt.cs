@@ -283,8 +283,7 @@ namespace MoarUtils.Utils {
     }
 
     public static void E(object o, bool fireEmailAsWell = false) {
-      try 
-      {
+      try {
         o = o ?? "";
         var t = o.GetType();
         if (!t.Equals(typeof(Exception)) & !typeof(Exception).IsAssignableFrom(t)) {
@@ -341,7 +340,7 @@ namespace MoarUtils.Utils {
             case "Void LogHeaders(System.Web.HttpRequest)":
             case "Void LogHeaders(System.Web.HttpRequestBase)":
             case "Void Log(Twilio.RestException, Severity)":
-            //case "Void Log(System.Exception, MoarUtils.Enums.Severity)":
+            //case "Void Log(System.Exception,  MoarUtils.Enums.Severity)":
             case "Void Log()":
             case "Void Log(string)":
             case "Void D(System.Object)":
