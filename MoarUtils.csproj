@@ -205,6 +205,7 @@
     <Compile Include="filters\AjaxAuthorizeAttribute.cs" />
     <Compile Include="filters\EmptyLinesRemover.cs" />
     <Compile Include="filters\Compress.cs" />
+    <Compile Include="filters\EnforceTrueAttribute.cs" />
     <Compile Include="filters\NoFollow.cs" />
     <Compile Include="filters\RequireSecureConnection.cs" />
     <Compile Include="handlers\EnforceHttpsHandler.cs" />
