@@ -103,6 +103,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AWSSDK, Version=2.3.55.0, Culture=neutral, PublicKeyToken=9f476d3089b52be3, processorArchitecture=MSIL">
+      <HintPath>..\..\av\git\dets\code\win\packages\AWSSDK.2.3.55.0\lib\net45\AWSSDK.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
       <Private>True</Private>
@@ -206,9 +210,16 @@
     <Compile Include="filters\EmptyLinesRemover.cs" />
     <Compile Include="filters\Compress.cs" />
     <Compile Include="filters\EnforceTrueAttribute.cs" />
+    <Compile Include="filters\NoCacheAttribute.cs" />
     <Compile Include="filters\NoFollow.cs" />
     <Compile Include="filters\RequireSecureConnection.cs" />
     <Compile Include="handlers\EnforceHttpsHandler.cs" />
+    <Compile Include="Model\AddressFields.cs" />
+    <Compile Include="Utils\AWS\S3\CreatePresignedUrl.cs" />
+    <Compile Include="Utils\AWS\S3\Delete.cs" />
+    <Compile Include="Utils\AWS\S3\Exists.cs" />
+    <Compile Include="Utils\AWS\S3\Upload.cs" />
+    <Compile Include="Utils\Gis\ReverseGeocode\ViaGoogle.cs" />
     <Compile Include="Utils\Hash.cs" />
     <Compile Include="Model\AreaCode.cs" />
     <Compile Include="Model\DownloadFile.cs" />
