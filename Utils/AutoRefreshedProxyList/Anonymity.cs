@@ -24,7 +24,7 @@ namespace MoarUtils.Utils.AutoRefreshedProxyList {
       get {
         lock (mLouwp) {
           //if we have some and then are <2 min old, then return them
-          if (lastAggregatedUsableProxies < DateTime.Now.AddMinutes(-20)) {
+          if (lastAggregatedUsableProxies < DateTime.UtcNow.AddMinutes(-20)) {
             //else, get new
             _louwp = KittenProxy.GetUsableWebProxies(
               apiHost: kittenProxyApiHost,
@@ -34,7 +34,7 @@ namespace MoarUtils.Utils.AutoRefreshedProxyList {
               minimumUptimePercentage: minimumUptimePercentage,
               minLatencySeconds: maxLatencySeconds
               );
-            lastAggregatedUsableProxies = DateTime.Now;
+            lastAggregatedUsableProxies = DateTime.UtcNow;
             LogIt.D("total:" + _louwp.Count + ((_louwp.Count == 0) ? "" : ("|first:" + _louwp[0].Address + "|last:" + _louwp[_louwp.Count - 1].Address)));
 
             //temp

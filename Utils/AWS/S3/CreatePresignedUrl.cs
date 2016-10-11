@@ -18,7 +18,7 @@ namespace MoarUtils.Utils.AWS.S3 {
           var gpsur = new GetPreSignedUrlRequest {
             BucketName = bucketName,
             Key = objectKey,
-            Expires = DateTime.Now.AddMinutes(15)
+            Expires = DateTime.UtcNow.AddMinutes(15)
           };
           url = s3Client.GetPreSignedURL(gpsur);
         }
