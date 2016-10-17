@@ -8,7 +8,7 @@ using System.Web;
 namespace MoarUtils.Utils.Gis.Geocode {
   public static class ViaGoogle {
     private const double m_dThrottleSeconds = .9; //1.725; //0.1; //100ms //Convert.ToDouble(1.725);
-    private static DateTime dtLastRequest = DateTime.Now;
+    private static DateTime dtLastRequest = DateTime.UtcNow;
     private static Mutex mLastRequest = new Mutex();
     
     private static string GetUrlSecondPart(string location) {
@@ -25,7 +25,7 @@ namespace MoarUtils.Utils.Gis.Geocode {
         TimeSpan tsDuration;
         bool bRequiredWaitTimeHasElapsed;
         do {
-          tsDuration = DateTime.Now - dtLastRequest;
+          tsDuration = DateTime.UtcNow - dtLastRequest;
           bRequiredWaitTimeHasElapsed = (tsDuration.TotalSeconds > m_dThrottleSeconds);
           if (!bRequiredWaitTimeHasElapsed) {
             int iMillisecondsToSleep = Convert.ToInt32((m_dThrottleSeconds - tsDuration.TotalSeconds) * Convert.ToDouble(1000));
@@ -100,7 +100,7 @@ namespace MoarUtils.Utils.Gis.Geocode {
           };
         }
       } finally {
-        dtLastRequest = DateTime.Now;
+        dtLastRequest = DateTime.UtcNow;
       }
     }
 

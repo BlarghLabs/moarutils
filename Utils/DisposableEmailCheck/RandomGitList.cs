@@ -16,10 +16,10 @@ namespace MoarUtils.Utils.DisposableEmailCheck {
       get {
         lock (mLoDomains) {
           //if we have some and then are <2 min old, then return them
-          if ((_loDomains == null) || (lastAggregatedDomainList < DateTime.Now.AddHours(-12))) {
+          if ((_loDomains == null) || (lastAggregatedDomainList < DateTime.UtcNow.AddHours(-12))) {
             //else, get new
             _loDomains = AcquireDomainList();
-            lastAggregatedDomainList = DateTime.Now;
+            lastAggregatedDomainList = DateTime.UtcNow;
             LogIt.D("total:" + _loDomains.Count + ((_loDomains.Count == 0) ? "" : ("|first:" + _loDomains[0] + "|last:" + _loDomains[_loDomains.Count - 1])));
           }
           return _loDomains;

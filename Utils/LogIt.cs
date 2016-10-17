@@ -196,7 +196,7 @@ namespace MoarUtils.Utils {
       #region create log file
       var r = (new Random()).Next(1000);
       try {
-        logFilePath = Path.Combine(logFolderPath, DateTime.Now.ToString("yyyyMMddhhmmssfff") + "_" + DateTime.Now.Ticks.ToString() + "_" + r.ToString() + ".txt");
+        logFilePath = Path.Combine(logFolderPath, DateTime.UtcNow.ToString("yyyyMMddhhmmssfff") + "_" + DateTime.UtcNow.Ticks.ToString() + "_" + r.ToString() + ".txt");
       } catch (Exception ex0) {
         al.Add(ex0.Message);
         logFilePath = Path.Combine(logFolderPath, Guid.NewGuid().ToString() + "_" + r.ToString() + ".txt");
@@ -265,7 +265,7 @@ namespace MoarUtils.Utils {
       try {
         MethodBase methodInfo = new StackFrame(1).GetMethod();
         string classAndMethod = methodInfo.DeclaringType.Name + "|" + methodInfo.Name;
-        log = DateTime.Now.ToString() + "|" + Environment.MachineName + "|" + classAndMethod + "|" + ex.Message;
+        log = DateTime.UtcNow.ToString() + "|" + Environment.MachineName + "|" + classAndMethod + "|" + ex.Message;
       } catch (Exception ex2) {
         E(ex2);
       }
@@ -354,7 +354,7 @@ namespace MoarUtils.Utils {
               break;
           }
           var classAndMethod = ((methodInfo.DeclaringType == null) ? "null" : methodInfo.DeclaringType.Name) + "|" + methodInfo.Name;
-          string log = DateTime.Now.ToString() + "|[" + severity.ToString().ToUpper() + "]|" + classAndMethod + "|" + msg; //currently just a string
+          string log = DateTime.UtcNow.ToString() + "|[" + severity.ToString().ToUpper() + "]|" + classAndMethod + "|" + msg; //currently just a string
 
           lock (LogIt.Instance.m) {
             LogIt.Instance.al.Add(log);
