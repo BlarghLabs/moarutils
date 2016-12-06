@@ -354,7 +354,7 @@ namespace MoarUtils.Utils {
               break;
           }
           var classAndMethod = ((methodInfo.DeclaringType == null) ? "null" : methodInfo.DeclaringType.Name) + "|" + methodInfo.Name;
-          string log = DateTime.UtcNow.ToString() + "|[" + severity.ToString().ToUpper() + "]|" + classAndMethod + "|" + msg; //currently just a string
+          string log = DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss.fff") + "|[" + severity.ToString().ToUpper() + "]|" + classAndMethod + "|" + msg; //currently just a string
 
           lock (LogIt.Instance.m) {
             LogIt.Instance.al.Add(log);
