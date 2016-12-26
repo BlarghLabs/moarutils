@@ -5,6 +5,8 @@ using System.Web.Mvc;
 
     public class Compress : ActionFilterAttribute {
     public override void OnActionExecuting(ActionExecutingContext filterContext) {
+      //http://stackoverflow.com/questions/15067049/asp-net-mvc-response-filter-is-null-when-using-actionfilterattribute-in-regist
+      if (filterContext.IsChildAction) return;
 
       var encodingsAccepted = filterContext.HttpContext.Request.Headers["Accept-Encoding"];
       if (string.IsNullOrEmpty(encodingsAccepted)) return;
