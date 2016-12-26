@@ -207,6 +207,7 @@
     <Compile Include="Enums\UserMsgFormat.cs" />
     <Compile Include="filters\AccessDeniedAuthorizeAttribute.cs" />
     <Compile Include="filters\AjaxAuthorizeAttribute.cs" />
+    <Compile Include="filters\CompressContent.cs" />
     <Compile Include="filters\EmptyLinesRemover.cs" />
     <Compile Include="filters\Compress.cs" />
     <Compile Include="filters\EnforceTrueAttribute.cs" />
