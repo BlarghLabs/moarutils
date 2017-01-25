@@ -43,6 +43,7 @@ namespace MoarUtils.Utils {
     private bool initiated = false;
     private bool inCleanup = false;
     public static int maxFileMegaBytes = 50;
+    public static bool removeNewlinesFromMessages = true;
 
     public static string logFolder {
       get { return logFolderPath; }
@@ -354,7 +355,11 @@ namespace MoarUtils.Utils {
               break;
           }
           var classAndMethod = ((methodInfo.DeclaringType == null) ? "null" : methodInfo.DeclaringType.Name) + "|" + methodInfo.Name;
-          string log = DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss.fff") + "|[" + severity.ToString().ToUpper() + "]|" + classAndMethod + "|" + msg; //currently just a string
+          string log = 
+            DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss.fff") 
+            + "|[" + severity.ToString().ToUpper() + "]|" 
+            + classAndMethod + "|" 
+            + !removeNewlinesFromMessages ? msg : msg.Replace("\r\n"," ").Replace("\n", " "); //currently just a string
 
           lock (LogIt.Instance.m) {
             LogIt.Instance.al.Add(log);
