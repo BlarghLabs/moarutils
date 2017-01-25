@@ -197,7 +197,7 @@ namespace MoarUtils.Utils {
       #region create log file
       var r = (new Random()).Next(1000);
       try {
-        logFilePath = Path.Combine(logFolderPath, DateTime.UtcNow.ToString("yyyyMMddhhmmssfff") + "_" + DateTime.UtcNow.Ticks.ToString() + "_" + r.ToString() + ".txt");
+        logFilePath = Path.Combine(logFolderPath, DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "_" + DateTime.UtcNow.Ticks.ToString() + "_" + r.ToString() + ".txt");
       } catch (Exception ex0) {
         al.Add(ex0.Message);
         logFilePath = Path.Combine(logFolderPath, Guid.NewGuid().ToString() + "_" + r.ToString() + ".txt");
@@ -356,7 +356,7 @@ namespace MoarUtils.Utils {
           }
           var classAndMethod = ((methodInfo.DeclaringType == null) ? "null" : methodInfo.DeclaringType.Name) + "|" + methodInfo.Name;
           string log = 
-            DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss.fff") 
+            DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff") 
             + " " //this is for cloud watch logs which requires space after timestamp: http://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/send_logs_to_cwl.html
             + "|[" + severity.ToString().ToUpper() + "]|" 
             + classAndMethod + "|" 

@@ -7,7 +7,7 @@
     <authors>$author$</authors>
     <owners>$author$</owners>
     <description>$description$</description>
-    <releaseNotes>made strip newline from msg by default</releaseNotes>
+    <releaseNotes>24 hour clock</releaseNotes>
     <language>en-US</language>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <!--
