@@ -359,7 +359,7 @@ namespace MoarUtils.Utils {
             DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss.fff") 
             + "|[" + severity.ToString().ToUpper() + "]|" 
             + classAndMethod + "|" 
-            + !removeNewlinesFromMessages ? msg : msg.Replace("\r\n"," ").Replace("\n", " "); //currently just a string
+            + (!removeNewlinesFromMessages ? msg : msg.Replace("\r\n"," ").Replace("\n", " ")); //currently just a string
 
           lock (LogIt.Instance.m) {
             LogIt.Instance.al.Add(log);

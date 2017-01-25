@@ -7,7 +7,7 @@
     <authors>$author$</authors>
     <owners>$author$</owners>
     <description>$description$</description>
-    <releaseNotes>changed datetime format yyyy-MM-dd hh:mm:ss.fff</releaseNotes>
+    <releaseNotes>made strip newline from msg by default</releaseNotes>
     <language>en-US</language>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <!--
