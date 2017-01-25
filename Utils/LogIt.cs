@@ -357,6 +357,7 @@ namespace MoarUtils.Utils {
           var classAndMethod = ((methodInfo.DeclaringType == null) ? "null" : methodInfo.DeclaringType.Name) + "|" + methodInfo.Name;
           string log = 
             DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss.fff") 
+            + " " //this is for cloud watch logs which requires space after timestamp: http://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/send_logs_to_cwl.html
             + "|[" + severity.ToString().ToUpper() + "]|" 
             + classAndMethod + "|" 
             + (!removeNewlinesFromMessages ? msg : msg.Replace("\r\n"," ").Replace("\n", " ")); //currently just a string
