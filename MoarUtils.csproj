@@ -215,6 +215,7 @@
     <Compile Include="filters\NoCacheAttribute.cs" />
     <Compile Include="filters\NoFollow.cs" />
     <Compile Include="filters\RequireSecureConnection.cs" />
+    <Compile Include="filters\XFrameOptionAllowAll.cs" />
     <Compile Include="handlers\EnforceHttpsHandler.cs" />
     <Compile Include="Model\AddressFields.cs" />
     <Compile Include="Utils\AWS\S3\CreatePresignedUrl.cs" />
@@ -295,6 +296,7 @@
     <Compile Include="Utils\Validation\PhoneNumberValidation.cs" />
     <Compile Include="Utils\Web\ConvertUrlsToLinks.cs" />
     <Compile Include="Utils\Web\GetPublicIp.cs" />
+    <Compile Include="Utils\Web\IsAndroidDevice.cs" />
     <Compile Include="Utils\Web\IsIOSDevice.cs" />
     <Compile Include="Utils\Web\LogHttpHeaders.cs" />
   </ItemGroup>
