@@ -7,7 +7,7 @@
     <authors>$author$</authors>
     <owners>$author$</owners>
     <description>$description$</description>
-    <releaseNotes>24 hour clock</releaseNotes>
+    <releaseNotes>more filters added, updated number lib</releaseNotes>
     <language>en-US</language>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <!--
