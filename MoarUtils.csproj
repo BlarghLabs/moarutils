@@ -147,8 +147,8 @@
       <HintPath>..\packages\ObjectDumper.1.0.0.12\lib\net35-Client\ObjectDumper.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="PhoneNumbersLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PhoneNumbersLib.1.0.0\lib\net45\PhoneNumbersLib.dll</HintPath>
+    <Reference Include="PhoneNumbers, Version=8.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\blarghlabs\code\win\packages\libphonenumber-csharp.8.3.1.1\lib\PhoneNumbers.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
@@ -208,9 +208,11 @@
     <Compile Include="Enums\UserMsgFormat.cs" />
     <Compile Include="filters\AccessDeniedAuthorizeAttribute.cs" />
     <Compile Include="filters\AjaxAuthorizeAttribute.cs" />
+    <Compile Include="filters\AllowCrossSiteJsonAttribute.cs" />
     <Compile Include="filters\CompressContent.cs" />
     <Compile Include="filters\EmptyLinesRemover.cs" />
     <Compile Include="filters\Compress.cs" />
+    <Compile Include="filters\EmptyToNullConverter.cs" />
     <Compile Include="filters\EnforceTrueAttribute.cs" />
     <Compile Include="filters\NoCacheAttribute.cs" />
     <Compile Include="filters\NoFollow.cs" />
