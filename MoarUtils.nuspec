@@ -27,7 +27,7 @@
       <frameworkAssembly assemblyName="Microsoft.Web.Infrastructure" targetFramework="net452" />
       <frameworkAssembly assemblyName="System.Net.Http.WebRequest" targetFramework="net452" />
       <frameworkAssembly assemblyName="System.Web" targetFramework="net452" />
-      <frameworkAssembly assemblyName="" targetFramework="net452" />
+      <!--<frameworkAssembly assemblyName="" targetFramework="net452" />-->
       <frameworkAssembly assemblyName="System.Web.Helpers"  targetFramework="net452" />
       <frameworkAssembly assemblyName="System.Web.Http" targetFramework="net452" />
       <frameworkAssembly assemblyName="System.Web.Mvc" targetFramework="net452" />
@@ -37,23 +37,22 @@
       <frameworkAssembly assemblyName="System.Web.WebPages.Razor" targetFramework="net452" />
     </frameworkAssemblies>
     <dependencies>
-      <dependency id="AWSSDK" version="2.3.55.0"  />
+      <dependency id="AWSSDK" version="2.3.55.2"  />
       <dependency id="DotNetZip" version="1.10.1" />
       <dependency id="EntityFramework" version="6.1.3" />
       <dependency id="HtmlAgilityPack" version="1.4.9.5" />
       <dependency id="JWT" version="1.3.4" />
-      <!--<dependency id="libphonenumber-csharp" version="7.2.5" />-->
+      <dependency id="libphonenumber-csharp" version="8.3.1.1" />
       <dependency id="MaxMind.Db" version="2.0.0" />
-      <dependency id="MaxMind.GeoIP2" version="2.6.0" />
+      <dependency id="MaxMind.GeoIP2" version="2.8.0" />
       <dependency id="Microsoft.AspNet.Mvc" version="5.2.3" />
       <dependency id="Microsoft.AspNet.Razor" version="3.2.3" />
       <dependency id="Microsoft.AspNet.WebApi.Client" version="5.2.3" />
       <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.3" />
       <dependency id="Microsoft.AspNet.WebPages" version="3.2.3" />
       <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
-      <dependency id="Newtonsoft.Json" version="9.0.1" />
+      <dependency id="Newtonsoft.Json" version="10.0.2" />
       <dependency id="ObjectDumper" version="1.0.0.12" />
-      <dependency id="PhoneNumbersLib" version="1.0.0" />
       <dependency id="RestSharp" version="105.2.3" />
     </dependencies>
   </metadata>
@@ -66,8 +65,3 @@
     <file src="README" target="content\README" />
   </files>
 </package>
-
-
-
-
-
