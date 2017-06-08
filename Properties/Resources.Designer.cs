@@ -39,7 +39,7 @@ namespace MoarUtils.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager(" MoarUtils.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MoarUtils.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -117,14 +117,6 @@ namespace MoarUtils.Properties {
         ///306,SK
         ///307,WY
         ///308,NE
-        ///309,IL
-        ///310,CA
-        ///312,IL
-        ///313,MI
-        ///314,MO
-        ///315,NY
-        ///316,KS
-        ///317,IN
         /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string area_codes {

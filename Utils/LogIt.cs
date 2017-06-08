@@ -400,6 +400,14 @@ namespace MoarUtils.Utils {
       return sb.ToString();
     }
 
+    public static void LogHeaders(HttpResponseBase hrb) {
+      StringBuilder sb = new StringBuilder();
+      foreach (string key in hrb.Headers.Keys) {
+        sb.AppendLine(key + ":" + hrb.Headers[key]);
+      }
+      LogIt.Log(sb.ToString(), Severity.Info);
+    }
+
     public static void LogTwimlHeaders(HttpRequestBase hrb) {
       StringBuilder sb = new StringBuilder();
       sb.AppendLine(hrb.Url.LocalPath + ":");
