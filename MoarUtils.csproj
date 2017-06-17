@@ -119,6 +119,30 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Google.Apis, Version=1.27.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\..\..\av\vocal\code\win\packages\Google.Apis.1.27.1\lib\net45\Google.Apis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.27.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\..\..\av\vocal\code\win\packages\Google.Apis.Auth.1.27.1\lib\net45\Google.Apis.Auth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.27.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\..\..\av\vocal\code\win\packages\Google.Apis.Auth.1.27.1\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.27.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\..\..\av\vocal\code\win\packages\Google.Apis.Core.1.27.1\lib\net45\Google.Apis.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.27.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\..\..\av\vocal\code\win\packages\Google.Apis.1.27.1\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.Apis.Vision.v1, Version=1.27.1.887, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\..\..\av\vocal\code\win\packages\Google.Apis.Vision.v1.1.27.1.887\lib\net45\Google.Apis.Vision.v1.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
@@ -135,6 +159,10 @@
       <HintPath>..\..\..\av\attribution\code\win\packages\MaxMind.GeoIP2.2.8.0\lib\net45\MaxMind.GeoIP2.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\av\vocal\code\win\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
@@ -145,6 +173,10 @@
     </Reference>
     <Reference Include="ObjectDumper, Version=1.0.0.12, Culture=neutral, PublicKeyToken=9e2fabf3af85dba9, processorArchitecture=MSIL">
       <HintPath>..\packages\ObjectDumper.1.0.0.12\lib\net35-Client\ObjectDumper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\..\..\av\vocal\code\win\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PhoneNumbers, Version=8.3.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -223,6 +255,10 @@
     <Compile Include="Utils\AWS\S3\CreatePresignedUrl.cs" />
     <Compile Include="Utils\AWS\S3\Delete.cs" />
     <Compile Include="Utils\AWS\S3\Exists.cs" />
+    <Compile Include="Utils\AWS\S3\Copy.cs" />
+    <Compile Include="Utils\AWS\S3\CrossRegionCopy.cs" />
+    <Compile Include="Utils\AWS\S3\FileLength.cs" />
+    <Compile Include="Utils\AWS\S3\Get.cs" />
     <Compile Include="Utils\AWS\S3\Upload.cs" />
     <Compile Include="Utils\Gis\ReverseGeocode\ViaGoogle.cs" />
     <Compile Include="Utils\Hash.cs" />
@@ -244,6 +280,8 @@
     <Compile Include="Utils\DisposableEmailCheck\IsDesposableEmail.cs" />
     <Compile Include="Utils\DisposableEmailCheck\RandomGitList.cs" />
     <Compile Include="Utils\EnumUtils.cs" />
+    <Compile Include="Utils\i18n\LogSupportedCultures.cs" />
+    <Compile Include="Utils\images\GoogleVisionApi.cs" />
     <Compile Include="Utils\IO\FileTypes.cs" />
     <Compile Include="Utils\IO\FileExtensions.cs" />
     <Compile Include="Utils\Geography\StateArray.cs" />
@@ -280,14 +318,17 @@
     <Compile Include="Utils\LogIt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\GuidUtils.cs" />
+    <Compile Include="Utils\measurements\MeasurementMath.cs" />
     <Compile Include="Utils\ModelStateUtils.cs" />
     <Compile Include="Utils\MvcUtils.cs" />
     <Compile Include="Utils\Network.cs" />
     <Compile Include="Utils\IO\Files.cs" />
+    <Compile Include="Utils\OwinUtils\GetOwinContext.cs" />
     <Compile Include="Utils\Proxy\KittenProxy.cs" />
     <Compile Include="Utils\Proxy\PistolProxy.cs" />
     <Compile Include="Utils\Passwords.cs" />
-    <Compile Include="Utils\RandomUtils.cs" />
+    <Compile Include="Utils\random\RandomStrings.cs" />
+    <Compile Include="Utils\random\RandomLists.cs" />
     <Compile Include="Utils\Slack\PublishToChannel.cs" />
     <Compile Include="Utils\Streams.cs" />
     <Compile Include="Utils\Telephony\AreaCodeLookup.cs" />
@@ -299,13 +340,16 @@
     <Compile Include="Utils\Web\ConvertUrlsToLinks.cs" />
     <Compile Include="Utils\Web\GetPublicIp.cs" />
     <Compile Include="Utils\Web\IsAndroidDevice.cs" />
+    <Compile Include="Utils\Web\IsAndroidRestUserAgent.cs" />
     <Compile Include="Utils\Web\IsIOSDevice.cs" />
     <Compile Include="Utils\Web\LogHttpHeaders.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="App_Data\area-codes.csv" />
-    <None Include="MoarUtils.nuspec" />
+    <None Include="MoarUtils.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="README" />
   </ItemGroup>

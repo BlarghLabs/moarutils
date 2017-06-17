@@ -10,7 +10,8 @@ namespace MoarUtils.Utils.AWS.S3 {
       string AWSSecretKey,      
       string bucketName,
       string objectKey,
-      out string url
+      out string url,
+      int numberOfMinutes = 30
     ) {
       url = "";
       try {
@@ -18,7 +19,7 @@ namespace MoarUtils.Utils.AWS.S3 {
           var gpsur = new GetPreSignedUrlRequest {
             BucketName = bucketName,
             Key = objectKey,
-            Expires = DateTime.UtcNow.AddMinutes(15)
+            Expires = DateTime.UtcNow.AddMinutes(numberOfMinutes)
           };
           url = s3Client.GetPreSignedURL(gpsur);
         }

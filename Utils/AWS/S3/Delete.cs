@@ -9,10 +9,11 @@ namespace MoarUtils.Utils.AWS.S3 {
       string AWSAccessKey,
       string AWSSecretKey,
       string bucketName,
-      string key
+      string key,
+      RegionEndpoint re
     ) {
       try {
-        using (var s3c = new AmazonS3Client(AWSAccessKey, AWSSecretKey, RegionEndpoint.USEast1)) {
+        using (var s3c = new AmazonS3Client(AWSAccessKey, AWSSecretKey, re)) {
           var dor = s3c.DeleteObject(new DeleteObjectRequest {
             BucketName = bucketName,
             Key = key
