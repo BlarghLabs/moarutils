@@ -331,6 +331,7 @@
     <Compile Include="Utils\Passwords.cs" />
     <Compile Include="Utils\random\RandomStrings.cs" />
     <Compile Include="Utils\random\RandomLists.cs" />
+    <Compile Include="Utils\Telephony\ReversePhoneLookup\WhitePagesPro.cs" />
     <Compile Include="Utils\Slack\PublishToChannel.cs" />
     <Compile Include="Utils\Streams.cs" />
     <Compile Include="Utils\Telephony\AreaCodeLookup.cs" />

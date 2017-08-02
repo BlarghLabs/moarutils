@@ -17,7 +17,10 @@ namespace MoarUtils.Utils.Web {
 #else
 #endif
         //LogIt.D(string.Join("|", new List<object> { HttpContext.Current.Request.UserHostAddress, HttpContext.Current.Request.Headers["X-Forwarded-For"], HttpContext.Current.Request.Headers["REMOTE_ADDR"] }));
-
+        if ((HttpContext.Current == null) || (HttpContext.Current.Request == null)) {
+          return null;
+        }
+        
         var ip = HttpContext.Current.Request.UserHostAddress;
         if (HttpContext.Current.Request.Headers["X-Forwarded-For"] != null) {
           ip = HttpContext.Current.Request.Headers["X-Forwarded-For"];
