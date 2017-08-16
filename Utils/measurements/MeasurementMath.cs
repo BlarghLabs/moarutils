@@ -61,7 +61,7 @@ namespace MoarUtils.Utils.measurements {
       if (!inches.HasValue) {
         return null;
       }
-      var result = inches.Value / 0.393701M;
+      var result = inches.Value * 2.54M;
       return result;
     }
     #endregion
