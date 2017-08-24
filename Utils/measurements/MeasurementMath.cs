@@ -17,7 +17,7 @@ namespace MoarUtils.Utils.measurements {
       if (!cubicMeters.HasValue) {
         return null;
       }
-      var result = cubicMeters.Value * 35.3146667M;
+      var result = cubicMeters.Value * 35.314670111696704M;
       return !roundToZeroDecimals ? result : Math.Round(result, 0);
     }
     #endregion
