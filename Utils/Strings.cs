@@ -1,6 +1,7 @@
-﻿using RestSharp.Extensions.MonoHttp;
+﻿//using RestSharp.Extensions.MonoHttp;
 using System;
 using System.Text.RegularExpressions;
+using System.Web;
 
 namespace MoarUtils.Utils {
   public class Strings {
