@@ -38,7 +38,7 @@
     </frameworkAssemblies>
     <dependencies>
       <dependency id="AWSSDK" version="2.3.55.2"  />
-      <dependency id="DotNetZip" version="1.10.1" />
+      <dependency id="DotNetZip" version="1.11.0" />
       <dependency id="EntityFramework" version="6.2.0" />
       <dependency id="HtmlAgilityPack" version="1.6.5" />
       <dependency id="JWT" version="2.4.2" />
