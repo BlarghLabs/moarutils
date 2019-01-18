@@ -159,7 +159,7 @@ namespace MoarUtils.Utils {
 
         initiated = true;
       } catch (Exception ex) {
-        System.Diagnostics.Trace.WriteLine("Failed to initiate LogIt: " + ex.Message);
+        Trace.WriteLine("Failed to initiate LogIt: " + ex.Message);
         throw;
       }
     }
@@ -308,7 +308,7 @@ namespace MoarUtils.Utils {
           }
         }
       } catch {
-        System.Console.Error.WriteLine("I messed up, this all should be safe from exception");
+        Console.Error.WriteLine("I messed up, this all should be safe from exception");
       }
     }
 
@@ -333,7 +333,7 @@ namespace MoarUtils.Utils {
             errorCount++;
             break;
         }
-        if (severity >= LogIt.Instance.includeLogsAsLowAs) {
+        if (severity >= Instance.includeLogsAsLowAs) {
           var methodInfo = new StackFrame(1).GetMethod();
           switch (methodInfo.ToString()) {
             //I don't see current fcn
@@ -362,12 +362,12 @@ namespace MoarUtils.Utils {
             + classAndMethod + "|" 
             + (!removeNewlinesFromMessages ? msg : msg.Replace("\r\n"," ").Replace("\n", " ")); //currently just a string
 
-          lock (LogIt.Instance.m) {
-            LogIt.Instance.al.Add(log);
+          lock (Instance.m) {
+            Instance.al.Add(log);
           }
 
-          if (fireEmailAsWell && LogIt.Instance.emailSettingsAppearValid) {
-            Email.SendMessage(LogIt.Instance.appEmailAddress, "", LogIt.Instance.appEmailAddress, "", "log", log, "", "", "", "", EmailEngine.DotNet, false, true, false);
+          if (fireEmailAsWell && Instance.emailSettingsAppearValid) {
+            Email.SendMessage(Instance.appEmailAddress, "", Instance.appEmailAddress, "", "log", log, "", "", "", "", EmailEngine.DotNet, false, true, false);
           }
         }
       } catch (Exception ex) {
@@ -390,26 +390,26 @@ namespace MoarUtils.Utils {
     }
 
     public static string LogHeaders(HttpRequestBase hrb) {
-      StringBuilder sb = new StringBuilder();
+      var sb = new StringBuilder();
       sb.AppendLine(hrb.Url.LocalPath + ":");
       sb.AppendLine("     " + hrb.RawUrl.ToString());
       foreach (string key in hrb.Params.Keys) {
         sb.AppendLine("     " + key + "|" + hrb[key]);
       }
-      LogIt.Log(sb.ToString(), Severity.Info);
+      Log(sb.ToString(), Severity.Info);
       return sb.ToString();
     }
 
     public static void LogHeaders(HttpResponseBase hrb) {
-      StringBuilder sb = new StringBuilder();
+      var sb = new StringBuilder();
       foreach (string key in hrb.Headers.Keys) {
         sb.AppendLine(key + ":" + hrb.Headers[key]);
       }
-      LogIt.Log(sb.ToString(), Severity.Info);
+      Log(sb.ToString(), Severity.Info);
     }
 
     public static void LogTwimlHeaders(HttpRequestBase hrb) {
-      StringBuilder sb = new StringBuilder();
+      var sb = new StringBuilder();
       sb.AppendLine(hrb.Url.LocalPath + ":");
       sb.AppendLine("     " + hrb.RawUrl.ToString());
       foreach (string key in hrb.Params.Keys) {
@@ -470,37 +470,42 @@ namespace MoarUtils.Utils {
             break;
         }
       }
-      LogIt.Log(sb.ToString(), Severity.Info);
+      Log(sb.ToString(), Severity.Info);
     }
 
     public /* private */ static void FlushToFile(object sender = null, ElapsedEventArgs e = null) {
       try {
         if (!shutdownRequested) {
-          if (LogIt.Instance.initiated) {
-            lock (LogIt.Instance.m) {
+          if (Instance.initiated) {
+            lock (Instance.m) {
+              //for time format consistency
+              //https://social.msdn.microsoft.com/Forums/vstudio/en-US/bb926074-d593-4e0b-8754-7026acc607ec/datetime-tostring-colon-replaced-with-period?forum=csharpgeneral
+              Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+              Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-US");
+
               //grab fixed number of events and log just those, not any added after we got here
-              int numToPop = LogIt.Instance.al.Count;
+              int numToPop = Instance.al.Count;
 
               for (int i = 0; i < numToPop; i++) {
-                Trace.WriteLine(LogIt.Instance.al[0]);
+                Trace.WriteLine(Instance.al[0]);
                 #region during cleanup, Trace breaks, so we append explicitly
-                if (LogIt.Instance.inCleanup) {
-                  using (StreamWriter sw = File.AppendText(logFilePath)) {
-                    sw.WriteLine(LogIt.Instance.al[0]);
+                if (Instance.inCleanup) {
+                  using (var sw = File.AppendText(logFilePath)) {
+                    sw.WriteLine(Instance.al[0]);
                   }
                 }
                 #endregion
-                if (LogIt.Instance.al[0].ToString().Contains("[ERROR]")) {
+                if (Instance.al[0].ToString().Contains("[ERROR]")) {
                   Console.ForegroundColor = ConsoleColor.Red;
-                  System.Console.Error.WriteLine(LogIt.Instance.al[0]); //maybe do error.writeline if we see [error]
-                } else if (LogIt.Instance.al[0].ToString().Contains("[WARNING]")) {
+                  Console.Error.WriteLine(Instance.al[0]); //maybe do error.writeline if we see [error]
+                } else if (Instance.al[0].ToString().Contains("[WARNING]")) {
                   Console.ForegroundColor = ConsoleColor.Yellow;
-                  System.Console.Error.WriteLine(LogIt.Instance.al[0]); //maybe do error.writeline if we see [error]
+                  Console.Error.WriteLine(Instance.al[0]); //maybe do error.writeline if we see [error]
                 } else {
                   Console.ForegroundColor = ConsoleColor.White;
-                  System.Console.WriteLine(LogIt.Instance.al[0]); //maybe do error.writeline if we see [error]
+                  Console.WriteLine(Instance.al[0]); //maybe do error.writeline if we see [error]
                 }
-                LogIt.Instance.al.RemoveAt(0);
+                Instance.al.RemoveAt(0);
               }
               Trace.Flush();
               //fs.Close();         
@@ -515,13 +520,13 @@ namespace MoarUtils.Utils {
 
     private static void CreateNewFileIfMaxSize(object sender = null, ElapsedEventArgs e = null) {
       //Create new file if > max file size 
-      if (LogIt.Instance.initiated) {
+      if (Instance.initiated) {
         if (!shutdownRequested) {
-          lock (LogIt.Instance.m) {
+          lock (Instance.m) {
             var fi = new FileInfo(logFilePath);
             int maxBytes = maxFileMegaBytes * 1000 * 1000;
             if (fi.Length > (maxBytes)) {
-              LogIt.Instance.SetFilePath();
+              Instance.SetFilePath();
             }
           }
         }
@@ -530,10 +535,10 @@ namespace MoarUtils.Utils {
 
     private static void CreateNewFile(object sender = null, ElapsedEventArgs e = null) {
       //Create new file if we have been open for over 24 hours
-      if (LogIt.Instance.initiated) {
+      if (Instance.initiated) {
         if (!shutdownRequested) {
-          lock (LogIt.Instance.m) {
-            LogIt.Instance.SetFilePath();
+          lock (Instance.m) {
+            Instance.SetFilePath();
           }
         }
       }
