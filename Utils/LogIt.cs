@@ -45,23 +45,17 @@ namespace MoarUtils.Utils {
     public static int maxFileMegaBytes = 50;
     public static bool removeNewlinesFromMessages = true;
 
-    public static string logFolder {
-      get { return logFolderPath; }
-    }
+    public static string logFolder => logFolderPath;
 
-    public static string logFile {
-      get { return logFilePath; }
-    }
+    public static string logFile => logFilePath;
 
-    public static string logSubName {
-      get { return logFileSubName; }
-    }
+    public static string logSubName => logFileSubName;
 
     #region error count
     private static Mutex mErrorCount;
     private static int _errorCount;
     public static int errorCount {
-      get { return _errorCount; }
+      get => _errorCount;
       set {
         lock (mErrorCount) {
           _errorCount = value;
@@ -74,7 +68,7 @@ namespace MoarUtils.Utils {
     private static Mutex mShutdownRequested;
     private static bool _shutdownRequested;
     public static bool shutdownRequested {
-      get { return _shutdownRequested; }
+      get => _shutdownRequested;
       set {
         lock (mShutdownRequested) {
           _shutdownRequested = value;
@@ -255,12 +249,7 @@ namespace MoarUtils.Utils {
       }
     }
 
-    public static LogIt Instance {
-      get {
-        return instance;
-      }
-    }
-
+    public static LogIt Instance => instance;
     private static string GetErrorDetail(Exception ex) {
       string log = "";
       try {
@@ -355,12 +344,15 @@ namespace MoarUtils.Utils {
               break;
           }
           var classAndMethod = ((methodInfo.DeclaringType == null) ? "null" : methodInfo.DeclaringType.Name) + "|" + methodInfo.Name;
-          string log = 
-            DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff") 
+          var dt = DateTime.UtcNow;
+          string log =
+          //for format consistency
+          //https://social.msdn.microsoft.com/Forums/vstudio/en-US/bb926074-d593-4e0b-8754-7026acc607ec/datetime-tostring-colon-replaced-with-period?forum=csharpgeneral
+          dt.ToString("yyyy-MM-dd HH") + ":" + dt.ToString("mm") + ":" + dt.ToString("ss") + "." + dt.ToString("fff")
             + " " //this is for cloud watch logs which requires space after timestamp: http://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/send_logs_to_cwl.html
-            + "|[" + severity.ToString().ToUpper() + "]|" 
-            + classAndMethod + "|" 
-            + (!removeNewlinesFromMessages ? msg : msg.Replace("\r\n"," ").Replace("\n", " ")); //currently just a string
+            + "|[" + severity.ToString().ToUpper() + "]|"
+            + classAndMethod + "|"
+            + (!removeNewlinesFromMessages ? msg : msg.Replace("\r\n", " ").Replace("\n", " ")); //currently just a string
 
           lock (Instance.m) {
             Instance.al.Add(log);
@@ -478,11 +470,6 @@ namespace MoarUtils.Utils {
         if (!shutdownRequested) {
           if (Instance.initiated) {
             lock (Instance.m) {
-              //for time format consistency
-              //https://social.msdn.microsoft.com/Forums/vstudio/en-US/bb926074-d593-4e0b-8754-7026acc607ec/datetime-tostring-colon-replaced-with-period?forum=csharpgeneral
-              Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
-              Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-US");
-
               //grab fixed number of events and log just those, not any added after we got here
               int numToPop = Instance.al.Count;
 
