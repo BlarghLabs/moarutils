@@ -280,7 +280,7 @@ namespace MoarUtils.Utils {
           Log(o, Severity.Error, fireEmailAsWell);
         } else {
           var ex = (Exception)o;
-          var guid = Guid.NewGuid().ToString();
+          var guid = Guid.NewGuid().ToString().Replace("-","");
           Log(guid + "|" + ex.Message, Severity.Error, fireEmailAsWell);
           Log(guid + "|" + ex.StackTrace, Severity.Error, fireEmailAsWell);
           if ((ex.InnerException != null)
