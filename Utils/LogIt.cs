@@ -1,5 +1,7 @@
 ﻿using MoarUtils.Enums;
 using MoarUtils.Utils.Validation;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Configuration;
@@ -251,10 +253,10 @@ namespace MoarUtils.Utils {
 
     public static LogIt Instance => instance;
     private static string GetErrorDetail(Exception ex) {
-      string log = "";
+      var log = "";
       try {
-        MethodBase methodInfo = new StackFrame(1).GetMethod();
-        string classAndMethod = methodInfo.DeclaringType.Name + "|" + methodInfo.Name;
+        var mb = new StackFrame(1).GetMethod();
+        string classAndMethod = mb.DeclaringType.Name + "|" + mb.Name;
         log = DateTime.UtcNow.ToString() + "|" + Environment.MachineName + "|" + classAndMethod + "|" + ex.Message;
       } catch (Exception ex2) {
         E(ex2);
@@ -267,8 +269,8 @@ namespace MoarUtils.Utils {
     }
 
     public static string GetMethodAndClass() {
-      MethodBase methodInfo = new StackFrame(1).GetMethod();
-      string classAndMethod = methodInfo.DeclaringType.Name + "|" + methodInfo.Name;
+      var mb = new StackFrame(1).GetMethod();
+      string classAndMethod = mb.DeclaringType.Name + "|" + mb.Name;
       return classAndMethod;
     }
 
@@ -280,21 +282,32 @@ namespace MoarUtils.Utils {
           Log(o, Severity.Error, fireEmailAsWell);
         } else {
           var ex = (Exception)o;
-          var guid = Guid.NewGuid().ToString().Replace("-","");
-          Log(guid + "|" + ex.Message, Severity.Error, fireEmailAsWell);
-          Log(guid + "|" + ex.StackTrace, Severity.Error, fireEmailAsWell);
-          if ((ex.InnerException != null)
-              && !string.IsNullOrEmpty(ex.InnerException.Message)
-              && ex.Message.Contains("See the inner exception for details.")
+          dynamic error = new JObject();
+          error.message = ex.Message;
+          error.stackTrace = ex.StackTrace;
+
+          if (
+            (ex.InnerException != null)
+            &&
+            !string.IsNullOrEmpty(ex.InnerException.Message)
+            &&
+            ex.Message.Contains("See the inner exception for details.")
           ) {
-            Log(guid + "|" + ex.InnerException.Message, Severity.Error, fireEmailAsWell);
-            if ((ex.InnerException.InnerException != null)
-                && !string.IsNullOrEmpty(ex.InnerException.InnerException.Message)
-                && ex.InnerException.Message.Contains("See the inner exception for details")
+            if (!ex.InnerException.Message.Contains("See the inner exception for details.")) {
+              error.innerExceptionMessage = ex.InnerException.Message;
+            } else if (
+              (ex.InnerException.InnerException != null)
+              &&
+              !string.IsNullOrEmpty(ex.InnerException.InnerException.Message)
+              &&
+              !ex.InnerException.InnerException.Message.Contains("See the inner exception for details")
             ) {
-              Log(guid + "|" + ex.InnerException.InnerException.Message, Severity.Error, fireEmailAsWell);
+              error.innerExceptionMessage = ex.InnerException.InnerException.Message;
             }
           }
+
+          string json = JsonConvert.SerializeObject(error, Formatting.Indented);
+          Log(json, Severity.Error, fireEmailAsWell);
         }
       } catch {
         Console.Error.WriteLine("I messed up, this all should be safe from exception");
@@ -316,7 +329,7 @@ namespace MoarUtils.Utils {
     public static void Log(object o, Severity severity, bool fireEmailAsWell = false) {
       try {
         o = o ?? "";
-        string msg = o.ToString();
+        var msg = o.ToString();
         switch (severity) {
           case Severity.Error:
             errorCount++;
