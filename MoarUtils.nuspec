@@ -37,7 +37,7 @@
       <frameworkAssembly assemblyName="System.Web.WebPages.Razor" targetFramework="net452" />
     </frameworkAssemblies>
     <dependencies>
-      <dependency id="AWSSDK" version="2.3.55.2"  />
+      <dependency id="AWSSDK.S3" version="3.3.31.20"  />
       <dependency id="DotNetZip" version="1.13.0" />
       <dependency id="EntityFramework" version="6.2.0" />
       <dependency id="HtmlAgilityPack" version="1.8.4" />
