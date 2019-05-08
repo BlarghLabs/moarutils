@@ -297,7 +297,7 @@ namespace MoarUtils.Utils {
 
           string validationMessage = "";
           
-          if (ExtractIfInnerException(ex, out validationMessage)) {
+          if (ExtractIfEntityValidationErrors(ex, out validationMessage)) {
             error.validationMessage = validationMessage;
           }
 
@@ -345,21 +345,26 @@ namespace MoarUtils.Utils {
     }
 
     private static bool ExtractIfEntityValidationErrors(Exception ex, out string message) {
+      Exception current = ex;
 
-      DbEntityValidationException validationException = ex as DbEntityValidationException;
-      if (validationException != null && validationException.EntityValidationErrors.Any()) {
-        StringBuilder sb = new StringBuilder();
+      while (current != null) {
+        DbEntityValidationException validationException = current as DbEntityValidationException;
+        if (validationException != null && validationException.EntityValidationErrors.Any()) {
+          StringBuilder sb = new StringBuilder();
 
-        sb.AppendLine("Validation errors:");
-        foreach (var entityError in e.EntityValidationErrors) {
-          foreach (var validationError in entityError.ValidationErrors) {
-            sb.Append(validationError.PropertyName).Append(": ");
-            sb.Append(validationError.ErrorMessage).AppendLine(";");
+          sb.AppendLine("Validation errors:");
+          foreach (var entityError in e.EntityValidationErrors) {
+            foreach (var validationError in entityError.ValidationErrors) {
+              sb.Append(validationError.PropertyName).Append(": ");
+              sb.Append(validationError.ErrorMessage).AppendLine(";");
+            }
           }
-        }
 
-        return true;
+          return true;
+        }
+        current = current.InnerException;
       }
+
       return false;
     }
 
