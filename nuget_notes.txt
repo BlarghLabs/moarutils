@@ -1,0 +1,12 @@
+REM update release notes
+REM rebuild in release (add cli how to)
+
+REM compile in release mode git.sln
+cls
+cd C:\Users\admin\Documents\blargh\opensource
+
+set PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE
+devenv git.sln /rebuild "Release|x64" 
+
+cd C:\Users\admin\Documents\blargh\opensource\MoarUtils
+C:\Users\admin\Documents\blargh\opensource\.nuget\NuGet.exe pack MoarUtils.csproj

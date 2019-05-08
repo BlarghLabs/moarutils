@@ -29,6 +29,8 @@ namespace MoarUtils.Utils.Web {
           ip = HttpContext.Current.Request.Headers["REMOTE_ADDR"];
           //LogIt.D(ip + "|REMOTE_ADDR");
         }
+
+        //ip = string.IsNullOrEmpty(ip) ? ip : ip.Split()
         return ip;
       } catch (Exception ex) {
         LogIt.E(ex);
