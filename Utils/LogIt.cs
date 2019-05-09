@@ -42,9 +42,11 @@ namespace MoarUtils.Utils {
     private FileStream fs;
     private TextWriterTraceListener twtl;
     private ConcurrentQueue<string> al;
+    private ConcurrentQueue<Action> el;
     private System.Timers.Timer flushToFile;
     private System.Timers.Timer newFileEachDay;
     private System.Timers.Timer newFileIfMaxFileSizeMet;
+    private System.Timers.Timer sendEmail;
     private Mutex m;
     private bool emailSettingsAppearValid;
     private bool initiated = false;
@@ -53,6 +55,7 @@ namespace MoarUtils.Utils {
       "",
       "One or more errors occurred"
     };
+    private const int MAX_FLUSH_SIZE = 10;
     public static int maxFileMegaBytes = 50;
     public static bool removeNewlinesFromMessages = true;
 
@@ -98,6 +101,7 @@ namespace MoarUtils.Utils {
         mErrorCount = new Mutex();
         m = new Mutex();
         al = new ConcurrentQueue<string>();
+        el = new ConcurrentQueue<Action>();
 
         #region Optional Confg Values
         try {
@@ -161,6 +165,7 @@ namespace MoarUtils.Utils {
         InitiateTimer(ref flushToFile, 500 /* .5s */, FlushToFile);
         InitiateTimer(ref newFileEachDay, 1000 * 60 * 60 * 24 /* 24h */, CreateNewFile);
         InitiateTimer(ref newFileIfMaxFileSizeMet, 1000 * 60 * 10  /* 10m */, CreateNewFileIfMaxSize);
+        InitiateTimer(ref sendEmail, 5000 /* 5s */, SendEmail);
 
         initiated = true;
       } catch (Exception ex) {
@@ -346,6 +351,7 @@ namespace MoarUtils.Utils {
 
     private static bool ExtractIfEntityValidationErrors(Exception ex, out string message) {
       Exception current = ex;
+      message = null;
 
       while (current != null) {
         DbEntityValidationException validationException = current as DbEntityValidationException;
@@ -353,13 +359,14 @@ namespace MoarUtils.Utils {
           StringBuilder sb = new StringBuilder();
 
           sb.AppendLine("Validation errors:");
-          foreach (var entityError in e.EntityValidationErrors) {
+          foreach (var entityError in validationException.EntityValidationErrors) {
             foreach (var validationError in entityError.ValidationErrors) {
               sb.Append(validationError.PropertyName).Append(": ");
               sb.Append(validationError.ErrorMessage).AppendLine(";");
             }
           }
 
+          message = sb.ToString();
           return true;
         }
         current = current.InnerException;
@@ -422,12 +429,12 @@ namespace MoarUtils.Utils {
             + classAndMethod + "|"
             + (!removeNewlinesFromMessages ? msg : msg.Replace("\r\n", " ").Replace("\n", " ")); //currently just a string
 
-          lock (Instance.m) {
-            Instance.al.Enqueue(log);
-          }
+          Instance.al.Enqueue(log);
 
           if (fireEmailAsWell && Instance.emailSettingsAppearValid) {
-            Email.SendMessage(Instance.appEmailAddress, "", Instance.appEmailAddress, "", "log", log, "", "", "", "", EmailEngine.DotNet, false, true, false);
+            Instance.el.Enqueue(() => {
+              Email.SendMessage(Instance.appEmailAddress, "", Instance.appEmailAddress, "", "log", log, "", "", "", "", EmailEngine.DotNet, false, true, false);
+            });
           }
         }
       } catch (Exception ex) {
@@ -542,12 +549,12 @@ namespace MoarUtils.Utils {
               List<string> alBuffer = new List<string>();
 
               string bufferItem;
-              while (al.TryDequeue(out bufferItem)) {
+              while (Instance.al.TryDequeue(out bufferItem)) {
                 alBuffer.Add(bufferItem);
               }
               
               //grab fixed number of events and log just those, not any added after we got here
-              int numToPop = alBuffer.Count;
+              int numToPop = alBuffer.Count < MAX_FLUSH_SIZE ? alBuffer.Count : MAX_FLUSH_SIZE;
 
               for (int i = 0; i < numToPop; i++) {
                 Trace.WriteLine(alBuffer[i]);
@@ -603,6 +610,18 @@ namespace MoarUtils.Utils {
             Instance.SetFilePath();
           }
         }
+      }
+    }
+
+    private static void SendEmail(object sender = null, ElapsedEventArgs e = null) {
+      try {
+        Action action;
+        while (Instance.el.TryDequeue(out action))
+        {
+          action();
+        }
+      } catch (Exception ex) {
+        Log(e, Severity.Error);
       }
     }
   }
