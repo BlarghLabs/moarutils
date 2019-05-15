@@ -3,27 +3,25 @@ using MoarUtils.Utils.Validation;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
-using System.Configuration;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Configuration;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Timers;
 using System.Web;
-using System.Linq;
-using System.Data.Entity.Validation;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 //using Twilio;
 
 //TODO: rewite this using trace and not filehandlers
 
-namespace MoarUtils.Utils {
-  public enum Severity {
+namespace MoarUtils.Utils
+{
+    public enum Severity {
     Debug = 0,
     Info = 1,
     Warning = 2,
@@ -51,8 +49,8 @@ namespace MoarUtils.Utils {
     private bool emailSettingsAppearValid;
     private bool initiated = false;
     private bool inCleanup = false;
-    private static string[] innerExceptionMessages = new string[] { 
-      "",
+    private static string[] innerExceptionMessages = new string[] {
+      "See the inner exception for details.",
       "One or more errors occurred"
     };
     private const int MAX_FLUSH_SIZE = 10;
