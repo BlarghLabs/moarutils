@@ -1,6 +1,8 @@
 
 [![NuGet version (MoarUtils)](https://img.shields.io/nuget/v/MoarUtils.svg)](https://www.nuget.org/packages/MoarUtils/)
 
+[![Build Status](https://sobelito.visualstudio.com/MoarUtils/_apis/build/status/BlarghLabs.MoarUtils?branchName=master)](https://sobelito.visualstudio.com/MoarUtils/_build/latest?definitionId=2&branchName=master)
+
 Optional App/Web.Config values:
 
 ```xml
