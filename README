@@ -1,4 +1,8 @@
-﻿Optional App/Web.Config values:
+[![NuGet version (MoarUtils)](https://img.shields.io/nuget/v/Newtonsoft.Json.svg?style=flat-square)](https://www.nuget.org/packages/MoarUtils/)
+
+
+
+Optional App/Web.Config values:
 
 <!-- LogIt -->
 <appSettings>
