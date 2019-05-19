@@ -3,6 +3,7 @@
 
 Optional App/Web.Config values:
 
+```xml
 <!-- LogIt -->
 <appSettings>
   <add key="LOGIT_LOG_LEVEL_FLOOR" value="0"/>
@@ -27,3 +28,4 @@ Optional App/Web.Config values:
     </smtp>
   </mailSettings>
 </system.net>
+```
