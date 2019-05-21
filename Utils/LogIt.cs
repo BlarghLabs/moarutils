@@ -3,12 +3,14 @@ using MoarUtils.Utils.Validation;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Configuration;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Timers;
@@ -17,8 +19,9 @@ using System.Web;
 
 //TODO: rewite this using trace and not filehandlers
 
-namespace MoarUtils.Utils {
-  public enum Severity {
+namespace MoarUtils.Utils
+{
+    public enum Severity {
     Debug = 0,
     Info = 1,
     Warning = 2,
@@ -36,14 +39,21 @@ namespace MoarUtils.Utils {
     private static string logFolderPath;
     private FileStream fs;
     private TextWriterTraceListener twtl;
-    private ArrayList al;
+    private ConcurrentQueue<string> al;
+    private ConcurrentQueue<Action> el;
     private System.Timers.Timer flushToFile;
     private System.Timers.Timer newFileEachDay;
     private System.Timers.Timer newFileIfMaxFileSizeMet;
+    private System.Timers.Timer sendEmail;
     private Mutex m;
     private bool emailSettingsAppearValid;
     private bool initiated = false;
     private bool inCleanup = false;
+    private static string[] innerExceptionMessages = new string[] {
+      "See the inner exception for details.",
+      "One or more errors occurred"
+    };
+    private const int MAX_FLUSH_SIZE = 10;
     public static int maxFileMegaBytes = 50;
     public static bool removeNewlinesFromMessages = true;
 
@@ -88,7 +98,8 @@ namespace MoarUtils.Utils {
         mShutdownRequested = new Mutex();
         mErrorCount = new Mutex();
         m = new Mutex();
-        al = new ArrayList();
+        al = new ConcurrentQueue<string>();
+        el = new ConcurrentQueue<Action>();
 
         #region Optional Confg Values
         try {
@@ -97,28 +108,28 @@ namespace MoarUtils.Utils {
           }
         } catch {
           includeLogsAsLowAs = Severity.Debug;
-          al.Add("error parsing LOGIT_LOG_LEVEL_FLOOR");
+          al.Enqueue("error parsing LOGIT_LOG_LEVEL_FLOOR");
         }
         try {
           if (ConfigurationManager.AppSettings["LOGIT_ADMIN_EMAIL"] != null) {
             appEmailAddress = ConfigurationManager.AppSettings["LOGIT_ADMIN_EMAIL"];
           }
         } catch {
-          al.Add("error parsing LOGIT_ADMIN_EMAIL");
+          al.Enqueue("error parsing LOGIT_ADMIN_EMAIL");
         }
         try {
           if (ConfigurationManager.AppSettings["LOGIT_SUB_NAME"] != null) {
             logFileSubName = ConfigurationManager.AppSettings["LOGIT_SUB_NAME"];
           }
         } catch {
-          al.Add("error parsing LOGIT_SUB_NAME");
+          al.Enqueue("error parsing LOGIT_SUB_NAME");
         }
         try {
           if (ConfigurationManager.AppSettings["LOGIT_LOG_DIRECTORY"] != null) {
             logFolderPath = ConfigurationManager.AppSettings["LOGIT_LOG_DIRECTORY"];
           }
         } catch {
-          al.Add("error parsing LOGIT_LOG_DIRECTORY");
+          al.Enqueue("error parsing LOGIT_LOG_DIRECTORY");
         }
         #endregion
 
@@ -130,15 +141,15 @@ namespace MoarUtils.Utils {
           //can be null: && !string.IsNullOrEmpty(sne.Password) 
           //are defaulted to 25 if not supplied: && !string.IsNullOrEmpty(sne.Port.ToString());
         } catch (Exception ex) {
-          al.Add("WARNING: unable to parse email settings");
-          al.Add(ex.Message);
-          al.Add(ex.StackTrace);
+          al.Enqueue("WARNING: unable to parse email settings");
+          al.Enqueue(ex.Message);
+          al.Enqueue(ex.StackTrace);
         }
         emailSettingsAppearValid = validSmtpSectionExists
           && !string.IsNullOrEmpty(appEmailAddress)
           && EmailValidation.IsEmailValid(appEmailAddress);
         if (!emailSettingsAppearValid) {
-          al.Add("WARNING: will be unable to email bc email address or smtp settings were invalid");
+          al.Enqueue("WARNING: will be unable to email bc email address or smtp settings were invalid");
         }
         #endregion
 
@@ -152,6 +163,7 @@ namespace MoarUtils.Utils {
         InitiateTimer(ref flushToFile, 500 /* .5s */, FlushToFile);
         InitiateTimer(ref newFileEachDay, 1000 * 60 * 60 * 24 /* 24h */, CreateNewFile);
         InitiateTimer(ref newFileIfMaxFileSizeMet, 1000 * 60 * 10  /* 10m */, CreateNewFileIfMaxSize);
+        InitiateTimer(ref sendEmail, 5000 /* 5s */, SendEmail);
 
         initiated = true;
       } catch (Exception ex) {
@@ -195,7 +207,7 @@ namespace MoarUtils.Utils {
       try {
         logFilePath = Path.Combine(logFolderPath, DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "_" + DateTime.UtcNow.Ticks.ToString() + "_" + r.ToString() + ".txt");
       } catch (Exception ex0) {
-        al.Add(ex0.Message);
+        al.Enqueue(ex0.Message);
         logFilePath = Path.Combine(logFolderPath, Guid.NewGuid().ToString() + "_" + r.ToString() + ".txt");
       }
       if (fs != null) {
@@ -286,24 +298,16 @@ namespace MoarUtils.Utils {
           error.message = ex.Message;
           error.stackTrace = ex.StackTrace;
 
-          if (
-            (ex.InnerException != null)
-            &&
-            !string.IsNullOrEmpty(ex.InnerException.Message)
-            &&
-            ex.Message.Contains("See the inner exception for details.")
-          ) {
-            if (!ex.InnerException.Message.Contains("See the inner exception for details.")) {
-              error.innerExceptionMessage = ex.InnerException.Message;
-            } else if (
-              (ex.InnerException.InnerException != null)
-              &&
-              !string.IsNullOrEmpty(ex.InnerException.InnerException.Message)
-              &&
-              !ex.InnerException.InnerException.Message.Contains("See the inner exception for details")
-            ) {
-              error.innerExceptionMessage = ex.InnerException.InnerException.Message;
-            }
+          string validationMessage = "";
+          
+          if (ExtractIfEntityValidationErrors(ex, out validationMessage)) {
+            error.validationMessage = validationMessage;
+          }
+
+          string innerMessage = "";
+
+          if (ExtractIfInnerException(ex, out innerMessage)) {
+            error.innerExceptionMessage = innerMessage;
           }
 
           string json = JsonConvert.SerializeObject(error, Formatting.Indented);
@@ -313,6 +317,62 @@ namespace MoarUtils.Utils {
         Console.Error.WriteLine("I messed up, this all should be safe from exception");
       }
     }
+
+    private static bool ExtractIfInnerException(Exception ex, out string message) {
+      message = null;
+
+      if (
+        (ex.InnerException != null)
+        &&
+        !string.IsNullOrWhiteSpace(ex.InnerException.Message)
+        &&
+        innerExceptionMessages.Any(m => ex.Message.Contains(m))
+      )  {
+        StringBuilder sb = new StringBuilder();
+        int maxLength = 5;
+        Exception current = ex.InnerException;
+        while (maxLength-- > 0 && current != null)
+        {
+          if (!innerExceptionMessages.Any(m => current.Message.Contains(m))) {
+            sb.AppendLine(current.Message);
+          }  
+          current = current.InnerException;          
+        }
+
+        message = sb.ToString();
+
+        return true;
+      }
+
+      return false;
+    }
+
+    private static bool ExtractIfEntityValidationErrors(Exception ex, out string message) {
+      Exception current = ex;
+      message = null;
+
+      while (current != null) {
+        DbEntityValidationException validationException = current as DbEntityValidationException;
+        if (validationException != null && validationException.EntityValidationErrors.Any()) {
+          StringBuilder sb = new StringBuilder();
+
+          sb.AppendLine("Validation errors:");
+          foreach (var entityError in validationException.EntityValidationErrors) {
+            foreach (var validationError in entityError.ValidationErrors) {
+              sb.Append(validationError.PropertyName).Append(": ");
+              sb.Append(validationError.ErrorMessage).AppendLine(";");
+            }
+          }
+
+          message = sb.ToString();
+          return true;
+        }
+        current = current.InnerException;
+      }
+
+      return false;
+    }
+
 
     public static void I(object o) {
       Log(o, Severity.Info);
@@ -367,12 +427,12 @@ namespace MoarUtils.Utils {
             + classAndMethod + "|"
             + (!removeNewlinesFromMessages ? msg : msg.Replace("\r\n", " ").Replace("\n", " ")); //currently just a string
 
-          lock (Instance.m) {
-            Instance.al.Add(log);
-          }
+          Instance.al.Enqueue(log);
 
           if (fireEmailAsWell && Instance.emailSettingsAppearValid) {
-            Email.SendMessage(Instance.appEmailAddress, "", Instance.appEmailAddress, "", "log", log, "", "", "", "", EmailEngine.DotNet, false, true, false);
+            Instance.el.Enqueue(() => {
+              Email.SendMessage(Instance.appEmailAddress, "", Instance.appEmailAddress, "", "log", log, "", "", "", "", EmailEngine.DotNet, false, true, false);
+            });
           }
         }
       } catch (Exception ex) {
@@ -483,29 +543,36 @@ namespace MoarUtils.Utils {
         if (!shutdownRequested) {
           if (Instance.initiated) {
             lock (Instance.m) {
+
+              List<string> alBuffer = new List<string>();
+
+              string bufferItem;
+              while (Instance.al.TryDequeue(out bufferItem)) {
+                alBuffer.Add(bufferItem);
+              }
+              
               //grab fixed number of events and log just those, not any added after we got here
-              int numToPop = Instance.al.Count;
+              int numToPop = alBuffer.Count < MAX_FLUSH_SIZE ? alBuffer.Count : MAX_FLUSH_SIZE;
 
               for (int i = 0; i < numToPop; i++) {
-                Trace.WriteLine(Instance.al[0]);
+                Trace.WriteLine(alBuffer[i]);
                 #region during cleanup, Trace breaks, so we append explicitly
                 if (Instance.inCleanup) {
                   using (var sw = File.AppendText(logFilePath)) {
-                    sw.WriteLine(Instance.al[0]);
+                    sw.WriteLine(alBuffer[i]);
                   }
                 }
                 #endregion
-                if (Instance.al[0].ToString().Contains("[ERROR]")) {
+                if (alBuffer[i].ToString().Contains("[ERROR]")) {
                   Console.ForegroundColor = ConsoleColor.Red;
-                  Console.Error.WriteLine(Instance.al[0]); //maybe do error.writeline if we see [error]
-                } else if (Instance.al[0].ToString().Contains("[WARNING]")) {
+                  Console.Error.WriteLine(alBuffer[i]); //maybe do error.writeline if we see [error]
+                } else if (alBuffer[i].ToString().Contains("[WARNING]")) {
                   Console.ForegroundColor = ConsoleColor.Yellow;
-                  Console.Error.WriteLine(Instance.al[0]); //maybe do error.writeline if we see [error]
+                  Console.Error.WriteLine(alBuffer[i]); //maybe do error.writeline if we see [error]
                 } else {
                   Console.ForegroundColor = ConsoleColor.White;
-                  Console.WriteLine(Instance.al[0]); //maybe do error.writeline if we see [error]
+                  Console.WriteLine(alBuffer[i]); //maybe do error.writeline if we see [error]
                 }
-                Instance.al.RemoveAt(0);
               }
               Trace.Flush();
               //fs.Close();         
@@ -541,6 +608,18 @@ namespace MoarUtils.Utils {
             Instance.SetFilePath();
           }
         }
+      }
+    }
+
+    private static void SendEmail(object sender = null, ElapsedEventArgs e = null) {
+      try {
+        Action action;
+        while (Instance.el.TryDequeue(out action))
+        {
+          action();
+        }
+      } catch (Exception ex) {
+        Log(e, Severity.Error);
       }
     }
   }
