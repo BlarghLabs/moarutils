@@ -1,6 +1,7 @@
 ﻿using MoarUtils.Enums;
 using System;
 using System.Configuration;
+using static MoarUtils.Utils.LogIt;
 
 namespace MoarUtils.Utils {
 
@@ -34,7 +35,7 @@ namespace MoarUtils.Utils {
     public static string CHILKAT_EMAIL_KEY;
 
     private static string GetRequiredConfigValue(string key) {
-      string value = "";
+      var value = "";
       try {
         value = ConfigurationManager.AppSettings[key];
         if (String.IsNullOrEmpty(value)) {
@@ -43,7 +44,7 @@ namespace MoarUtils.Utils {
         }
       } catch (Exception ex) {
         LogIt.E(ex);
-        throw;
+        throw; //?
       }
       return value;
     }

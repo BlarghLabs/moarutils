@@ -19,16 +19,15 @@ using System.Web;
 
 //TODO: rewite this using trace and not filehandlers
 
-namespace MoarUtils.Utils
-{
-    public enum Severity {
-    Debug = 0,
-    Info = 1,
-    Warning = 2,
-    Error = 3
-  }
-
+namespace MoarUtils.Utils {
   public sealed class LogIt {
+    public enum Severity {
+      Debug = 0,
+      Info = 1,
+      Warning = 2,
+      Error = 3
+    }
+
     private static readonly LogIt instance = new LogIt();
 
     //private static bool logToFile = true;
@@ -63,19 +62,6 @@ namespace MoarUtils.Utils
 
     public static string logSubName => logFileSubName;
 
-    #region error count
-    private static Mutex mErrorCount;
-    private static int _errorCount;
-    public static int errorCount {
-      get => _errorCount;
-      set {
-        lock (mErrorCount) {
-          _errorCount = value;
-        }
-      }
-    }
-    #endregion
-
     #region shutdownRequested
     private static Mutex mShutdownRequested;
     private static bool _shutdownRequested;
@@ -96,7 +82,6 @@ namespace MoarUtils.Utils
     LogIt() {
       try {
         mShutdownRequested = new Mutex();
-        mErrorCount = new Mutex();
         m = new Mutex();
         al = new ConcurrentQueue<string>();
         el = new ConcurrentQueue<Action>();
@@ -268,7 +253,7 @@ namespace MoarUtils.Utils
       var log = "";
       try {
         var mb = new StackFrame(1).GetMethod();
-        string classAndMethod = mb.DeclaringType.Name + "|" + mb.Name;
+        var classAndMethod = mb.DeclaringType.Name + "|" + mb.Name;
         log = DateTime.UtcNow.ToString() + "|" + Environment.MachineName + "|" + classAndMethod + "|" + ex.Message;
       } catch (Exception ex2) {
         E(ex2);
@@ -282,7 +267,7 @@ namespace MoarUtils.Utils
 
     public static string GetMethodAndClass() {
       var mb = new StackFrame(1).GetMethod();
-      string classAndMethod = mb.DeclaringType.Name + "|" + mb.Name;
+      var classAndMethod = mb.DeclaringType.Name + "|" + mb.Name;
       return classAndMethod;
     }
 
@@ -298,18 +283,14 @@ namespace MoarUtils.Utils
           error.message = ex.Message;
           error.stackTrace = ex.StackTrace;
 
-          string validationMessage = "";
-          
+          var validationMessage = "";
           if (ExtractIfEntityValidationErrors(ex, out validationMessage)) {
             error.validationMessage = validationMessage;
           }
-
-          string innerMessage = "";
-
+          var innerMessage = "";
           if (ExtractIfInnerException(ex, out innerMessage)) {
             error.innerExceptionMessage = innerMessage;
           }
-
           string json = JsonConvert.SerializeObject(error, Formatting.Indented);
           Log(json, Severity.Error, fireEmailAsWell);
         }
@@ -327,35 +308,30 @@ namespace MoarUtils.Utils
         !string.IsNullOrWhiteSpace(ex.InnerException.Message)
         &&
         innerExceptionMessages.Any(m => ex.Message.Contains(m))
-      )  {
-        StringBuilder sb = new StringBuilder();
-        int maxLength = 5;
-        Exception current = ex.InnerException;
-        while (maxLength-- > 0 && current != null)
-        {
+      ) {
+        var sb = new StringBuilder();
+        var maxLength = 5;
+        var current = ex.InnerException;
+        while (maxLength-- > 0 && current != null) {
           if (!innerExceptionMessages.Any(m => current.Message.Contains(m))) {
             sb.AppendLine(current.Message);
-          }  
-          current = current.InnerException;          
+          }
+          current = current.InnerException;
         }
-
         message = sb.ToString();
-
         return true;
       }
-
       return false;
     }
 
     private static bool ExtractIfEntityValidationErrors(Exception ex, out string message) {
-      Exception current = ex;
+      var current = ex;
       message = null;
 
       while (current != null) {
-        DbEntityValidationException validationException = current as DbEntityValidationException;
+        var validationException = current as DbEntityValidationException;
         if (validationException != null && validationException.EntityValidationErrors.Any()) {
-          StringBuilder sb = new StringBuilder();
-
+          var sb = new StringBuilder();
           sb.AppendLine("Validation errors:");
           foreach (var entityError in validationException.EntityValidationErrors) {
             foreach (var validationError in entityError.ValidationErrors) {
@@ -363,16 +339,13 @@ namespace MoarUtils.Utils
               sb.Append(validationError.ErrorMessage).AppendLine(";");
             }
           }
-
           message = sb.ToString();
           return true;
         }
         current = current.InnerException;
       }
-
       return false;
     }
-
 
     public static void I(object o) {
       Log(o, Severity.Info);
@@ -390,12 +363,15 @@ namespace MoarUtils.Utils
       try {
         o = o ?? "";
         var msg = o.ToString();
-        switch (severity) {
-          case Severity.Error:
-            errorCount++;
-            break;
-        }
         if (severity >= Instance.includeLogsAsLowAs) {
+          //dont check forever
+          //var methodInfo = new StackFrame(1).GetMethod();
+          //if (methodInfo.DeclaringType.Name == typeof(LogIt).Name) {
+          //  methodInfo = new StackFrame(2).GetMethod();
+          //}
+          //if (methodInfo.DeclaringType.Name == typeof(LogIt).Name) {
+          //  methodInfo = new StackFrame(3).GetMethod();
+          //}
           var methodInfo = new StackFrame(1).GetMethod();
           switch (methodInfo.ToString()) {
             //I don't see current fcn
@@ -418,7 +394,7 @@ namespace MoarUtils.Utils
           }
           var classAndMethod = ((methodInfo.DeclaringType == null) ? "null" : methodInfo.DeclaringType.Name) + "|" + methodInfo.Name;
           var dt = DateTime.UtcNow;
-          string log =
+          var log =
           //for format consistency
           //https://social.msdn.microsoft.com/Forums/vstudio/en-US/bb926074-d593-4e0b-8754-7026acc607ec/datetime-tostring-colon-replaced-with-period?forum=csharpgeneral
           dt.ToString("yyyy-MM-dd HH") + ":" + dt.ToString("mm") + ":" + dt.ToString("ss") + "." + dt.ToString("fff")
@@ -543,16 +519,14 @@ namespace MoarUtils.Utils
         if (!shutdownRequested) {
           if (Instance.initiated) {
             lock (Instance.m) {
-
-              List<string> alBuffer = new List<string>();
-
+              var alBuffer = new List<string>();
               string bufferItem;
               while (Instance.al.TryDequeue(out bufferItem)) {
                 alBuffer.Add(bufferItem);
               }
-              
+
               //grab fixed number of events and log just those, not any added after we got here
-              int numToPop = alBuffer.Count < MAX_FLUSH_SIZE ? alBuffer.Count : MAX_FLUSH_SIZE;
+              var numToPop = alBuffer.Count < MAX_FLUSH_SIZE ? alBuffer.Count : MAX_FLUSH_SIZE;
 
               for (int i = 0; i < numToPop; i++) {
                 Trace.WriteLine(alBuffer[i]);
@@ -591,7 +565,7 @@ namespace MoarUtils.Utils
         if (!shutdownRequested) {
           lock (Instance.m) {
             var fi = new FileInfo(logFilePath);
-            int maxBytes = maxFileMegaBytes * 1000 * 1000;
+            var maxBytes = maxFileMegaBytes * 1000 * 1000;
             if (fi.Length > (maxBytes)) {
               Instance.SetFilePath();
             }
@@ -614,12 +588,11 @@ namespace MoarUtils.Utils
     private static void SendEmail(object sender = null, ElapsedEventArgs e = null) {
       try {
         Action action;
-        while (Instance.el.TryDequeue(out action))
-        {
+        while (Instance.el.TryDequeue(out action)) {
           action();
         }
       } catch (Exception ex) {
-        Log(e, Severity.Error);
+        Log(ex, Severity.Error);
       }
     }
   }
