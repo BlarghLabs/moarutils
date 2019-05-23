@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 
 namespace MoarUtils.Utils.IO {
@@ -36,7 +34,8 @@ namespace MoarUtils.Utils.IO {
         string mime = Marshal.PtrToStringUni(mimeTypePtr);
         Marshal.FreeCoTaskMem(mimeTypePtr);
         return mime;
-      } catch (Exception e) {
+      } catch (Exception ex) {
+        System.Console.Error.WriteLine(ex.Message);
         return "unknown/unknown";
       }
     }
