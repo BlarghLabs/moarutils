@@ -1,4 +1,4 @@
-using MoarUtils.Enums;
+using MoarUtils.enums;
 using MoarUtils.Model;
 using MoarUtils.Utils;
 using RestSharp;

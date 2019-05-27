@@ -1,7 +1,8 @@
-﻿using System;
+﻿using MoarUtils.Utils;
+using System;
 using System.Web;
 
-namespace MoarUtils.Utils.Web {
+namespace MoarUtils.commands.web {
   public class LogHttpHeaders {
     public static void Execute(){
       try {

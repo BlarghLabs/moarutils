@@ -1,4 +1,4 @@
-﻿using MoarUtils.Enums;
+﻿using MoarUtils.enums;
 using MoarUtils.Utils.Validation;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -379,7 +379,7 @@ namespace MoarUtils.Utils {
             case "Void LogHeaders(System.Web.HttpRequest)":
             case "Void LogHeaders(System.Web.HttpRequestBase)":
             case "Void Log(Twilio.RestException, Severity)":
-            //case "Void Log(System.Exception,  MoarUtils.Enums.Severity)":
+            //case "Void Log(System.Exception,  MoarUtils.enums.Severity)":
             case "Void Log()":
             case "Void Log(string)":
             case "Void D(System.Object)":

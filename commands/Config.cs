@@ -1,4 +1,4 @@
-﻿using MoarUtils.Enums;
+﻿using MoarUtils.enums;
 using System;
 using System.Configuration;
 using static MoarUtils.Utils.LogIt;

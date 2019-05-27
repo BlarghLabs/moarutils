@@ -1,4 +1,4 @@
-﻿using MoarUtils.Enums;
+﻿using MoarUtils.enums;
 using MaxMind.GeoIP2;
 using MaxMind.GeoIP2.Responses;
 using System;

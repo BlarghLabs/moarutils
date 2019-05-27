@@ -1,7 +1,8 @@
-﻿using System;
+﻿using MoarUtils.Utils;
+using System;
 using System.Web;
 
-namespace MoarUtils.Utils.Web {
+namespace MoarUtils.commands.web {
   public class GetUserAgent {
     /// <summary>
     /// account for possbility of ELB sheilding the public ip

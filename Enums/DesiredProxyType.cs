@@ -1,4 +1,4 @@
-﻿namespace MoarUtils.Enums {
+﻿namespace MoarUtils.enums {
   public enum DesiredProxyType {
     open,
     shared,
