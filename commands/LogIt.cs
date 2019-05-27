@@ -1,5 +1,5 @@
-﻿using MoarUtils.enums;
-using MoarUtils.Utils.Validation;
+﻿using MoarUtils.commands.validation;
+using MoarUtils.enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

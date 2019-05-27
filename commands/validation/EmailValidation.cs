@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net.Mail;
 using System.Text;
-using System.Text.RegularExpressions;
 
-namespace MoarUtils.Utils.Validation {
+namespace MoarUtils.commands.validation {
   public class EmailValidation {
     public static ValidationResult ValidateEmailAddress(string email, string displayName = null) {
       bool isValid = IsEmailValid(email, displayName);
