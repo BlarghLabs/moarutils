@@ -62,6 +62,6 @@
     <file src="bin\Debug\ChilkatDotNet45.dll" target="lib\net40-Client" />
     <file src="bin\Release\MailMergeLib.dll" target="lib\net40-Client" />
     -->
-    <file src="README" target="content\README" />
+    <file src="README.md" target="content\README" />
   </files>
 </package>

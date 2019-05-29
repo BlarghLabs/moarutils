@@ -9,4 +9,4 @@ set PATH=%PATH%;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Co
 devenv git.sln /rebuild "Release|x64" 
 
 cd C:\Users\admin\Documents\blargh\opensource\MoarUtils
-C:\Users\admin\Documents\blargh\opensource\.nuget\NuGet.exe pack MoarUtils.csproj
+C:\Users\admin\Documents\blargh\opensource\MoarUtils\.nuget\NuGet.exe pack MoarUtils.csproj
