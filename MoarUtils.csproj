@@ -234,6 +234,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="commands\time\GetRelativeTime.cs" />
     <Compile Include="commands\web\GetExecutingUsername.cs" />
     <Compile Include="commands\web\GetPublicIpAddress.cs" />
     <Compile Include="commands\web\UnauthenticatedUser.cs" />
