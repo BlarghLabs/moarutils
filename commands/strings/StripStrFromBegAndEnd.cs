@@ -1,8 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using System.Web;
-
-namespace MoarUtils.commands.strings {
+﻿namespace MoarUtils.commands.strings {
   public class StripStrFromBegAndEnd {
     //This is case sensitive
     public static string Execute(string orig, string toRemove) {
