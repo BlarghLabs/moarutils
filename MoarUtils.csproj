@@ -234,6 +234,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="commands\lists\SplitList.cs" />
     <Compile Include="commands\strings\StripStrFromBegAndEnd.cs" />
     <Compile Include="commands\strings\Truncate.cs" />
     <Compile Include="commands\strings\CondenseWhiteSpace.cs" />
@@ -310,7 +311,7 @@
     <Compile Include="commands\LinqUtils.cs" />
     <Compile Include="commands\reflection\AssemblyInfo.cs" />
     <Compile Include="commands\Config.cs" />
-    <Compile Include="commands\csv\CSV.cs" />
+    <Compile Include="commands\csv\CreateFile.cs" />
     <Compile Include="commands\DebugString.cs" />
     <Compile Include="commands\Dates.cs" />
     <Compile Include="commands\gis\Geocode\ViaGoogle.cs" />
