@@ -1,3 +1,4 @@
+using MoarUtils.commands.strings;
 using MoarUtils.enums;
 using MoarUtils.Model;
 using RestSharp;
@@ -42,7 +43,7 @@ namespace MoarUtils.Utils.Gis.Geocode {
       // Build sUrl request to be sent to Yahoo!
       string locationUrl = "";
       if (!String.IsNullOrEmpty(location)) {
-        locationUrl = "v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22" + Strings.CondenseWhiteSpace(HttpUtility.UrlEncode(location.Replace("+", " "))) + "%22&format=json";
+        locationUrl = "v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22" + CondenseWhiteSpace.Execute(HttpUtility.UrlEncode(location.Replace("+", " "))) + "%22&format=json";
       }
       return locationUrl;
     }

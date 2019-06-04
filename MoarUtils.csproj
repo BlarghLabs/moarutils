@@ -234,6 +234,11 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="commands\strings\StripStrFromBegAndEnd.cs" />
+    <Compile Include="commands\strings\Truncate.cs" />
+    <Compile Include="commands\strings\CondenseWhiteSpace.cs" />
+    <Compile Include="commands\strings\AnyTwoToOne.cs" />
+    <Compile Include="commands\strings\RemoveHtmlComments.cs" />
     <Compile Include="commands\time\GetRelativeTime.cs" />
     <Compile Include="commands\web\GetExecutingUsername.cs" />
     <Compile Include="commands\web\GetPublicIpAddress.cs" />
@@ -338,7 +343,7 @@
     <Compile Include="commands\telephony\AreaCodeLookup.cs" />
     <Compile Include="commands\TimeUtils.cs" />
     <Compile Include="commands\Urls.cs" />
-    <Compile Include="commands\Strings.cs" />
+    <Compile Include="commands\strings\WhiteSpaceClean.cs" />
     <Compile Include="commands\validation\EmailValidation.cs" />
     <Compile Include="commands\validation\PhoneNumberValidation.cs" />
     <Compile Include="commands\web\ConvertUrlsToLinks.cs" />

@@ -1,4 +1,5 @@
-﻿using MoarUtils.Model;
+﻿using MoarUtils.commands.strings;
+using MoarUtils.Model;
 using RestSharp;
 using System;
 using System.Net;
@@ -14,7 +15,7 @@ namespace MoarUtils.Utils.Gis.Geocode {
     private static string GetUrlSecondPart(string location) {
       string locationUrl = "";
       if (!String.IsNullOrEmpty(location)) {
-        locationUrl = "address=" + Uri.EscapeDataString(Strings.CondenseWhiteSpace(HttpUtility.UrlEncode(location.Replace("+", " "))));
+        locationUrl = "address=" + Uri.EscapeDataString(CondenseWhiteSpace.Execute(HttpUtility.UrlEncode(location.Replace("+", " "))));
       }
       return "maps/api/geocode/json?" + locationUrl + "&sensor=false";
     }
