@@ -310,7 +310,7 @@
     <Compile Include="commands\LinqUtils.cs" />
     <Compile Include="commands\reflection\AssemblyInfo.cs" />
     <Compile Include="commands\Config.cs" />
-    <Compile Include="commands\CSV.cs" />
+    <Compile Include="commands\csv\CSV.cs" />
     <Compile Include="commands\DebugString.cs" />
     <Compile Include="commands\Dates.cs" />
     <Compile Include="commands\gis\Geocode\ViaGoogle.cs" />
