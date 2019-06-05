@@ -104,7 +104,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>packages\AWSSDK.Core.3.3.101.13\lib\net45\AWSSDK.Core.dll</HintPath>
+      <HintPath>..\..\pieteip\trunk\code\win\packages\AWSSDK.Core.3.3.102.2\lib\net45\AWSSDK.Core.dll</HintPath>
     </Reference>
     <Reference Include="AWSSDK.S3, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
       <HintPath>packages\AWSSDK.S3.3.3.102.3\lib\net45\AWSSDK.S3.dll</HintPath>
@@ -234,6 +234,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="commands\exceptions\GetBaseException.cs" />
     <Compile Include="commands\lists\SplitList.cs" />
     <Compile Include="commands\strings\StripStrFromBegAndEnd.cs" />
     <Compile Include="commands\strings\Truncate.cs" />
@@ -376,7 +377,9 @@
     <Analyzer Include="packages\AWSSDK.S3.3.3.102.1\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />-->
     <Analyzer Include="packages\AWSSDK.S3.3.3.102.3\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="extensions\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />

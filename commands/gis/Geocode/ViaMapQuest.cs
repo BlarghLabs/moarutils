@@ -29,8 +29,17 @@ namespace MoarUtils.Utils.Gis.Geocode {
           var client = new RestClient("http://www.mapquestapi.com/");
           var request = new RestRequest("/geocoding/v1/address?key=" + key + "&location=" + uea, Method.GET);
           var response = client.Execute(request);
-          var content = response.Content;
 
+          if (response.StatusCode != System.Net.HttpStatusCode.OK) {
+            LogIt.W($"status was {response.StatusCode}");
+            return c;
+          }
+          if (string.IsNullOrEmpty(response.Content)) {
+            LogIt.W($"content was empty");
+            return c;
+          }
+
+          var content = response.Content;
           dynamic json = Newtonsoft.Json.Linq.JObject.Parse(content);
           var sc = (json.info.statuscode == null) ? -1 : json.info.statuscode.Value;
 
