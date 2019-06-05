@@ -329,7 +329,7 @@
     <Compile Include="commands\GuidUtils.cs" />
     <Compile Include="commands\measurements\MeasurementMath.cs" />
     <Compile Include="commands\web\GetModelStateErrors.cs" />
-    <Compile Include="commands\MvcUtils.cs" />
+    <Compile Include="commands\web\MvcUtils.cs" />
     <Compile Include="commands\Network.cs" />
     <Compile Include="commands\io\Files.cs" />
     <Compile Include="commands\owin\GetOwinContext.cs" />
@@ -342,8 +342,8 @@
     <Compile Include="commands\slack\PublishToChannel.cs" />
     <Compile Include="commands\Streams.cs" />
     <Compile Include="commands\telephony\AreaCodeLookup.cs" />
-    <Compile Include="commands\TimeUtils.cs" />
-    <Compile Include="commands\Urls.cs" />
+    <Compile Include="commands\time\TimeUtils.cs" />
+    <Compile Include="commands\web\GetDomain.cs" />
     <Compile Include="commands\strings\WhiteSpaceClean.cs" />
     <Compile Include="commands\validation\EmailValidation.cs" />
     <Compile Include="commands\validation\PhoneNumberValidation.cs" />

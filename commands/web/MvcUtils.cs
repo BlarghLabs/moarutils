@@ -1,6 +1,6 @@
 ﻿using System.Web;
 
-namespace MoarUtils.Utils {
+namespace MoarUtils.commands.web {
   public class MvcUtils {
     public static string controllerName {
       get {

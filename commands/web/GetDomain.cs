@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 
-namespace MoarUtils.Utils {
-  public class Urls {
-    public static string GetDomain(string url) {
+namespace MoarUtils.commands.web {
+  public class GetDomain  {
+    public static string Execute(string url) {
       var domain = "";
       try {
         var uri = new Uri(url);

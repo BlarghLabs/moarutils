@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace MoarUtils.Utils {
-  public class TimeUtils {
-    public static string GetDisplayTime(int seconds) {
+namespace MoarUtils.commands.time {
+  public class GetDisplayTime {
+    public static string Execute(int seconds) {
       var s =
         ((TimeSpan.FromSeconds((int)seconds).Hours == 0) ? "" : (TimeSpan.FromSeconds((int)seconds).Hours + "h "))
         + TimeSpan.FromSeconds((int)seconds).Minutes + "m "
