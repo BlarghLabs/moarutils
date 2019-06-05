@@ -270,7 +270,7 @@
     <Compile Include="commands\aws\s3\Get.cs" />
     <Compile Include="commands\aws\s3\Upload.cs" />
     <Compile Include="commands\gis\ReverseGeocode\ViaGoogle.cs" />
-    <Compile Include="commands\Hash.cs" />
+    <Compile Include="commands\hashing\GetSha1.cs" />
     <Compile Include="models\AreaCode.cs" />
     <Compile Include="models\DownloadFile.cs" />
     <Compile Include="models\YahooApiGeocoderResult.cs" />
