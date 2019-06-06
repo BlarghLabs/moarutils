@@ -32,8 +32,6 @@ namespace moarutils.utils.gis.geocode {
       try {
         if (!string.IsNullOrEmpty(address) && !address.Equals("0")) {
           var uea = HttpUtility.UrlEncode(address.Trim());
-
-          //http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/find?text=1700 Penny ave washingtn dc&f=pjson&forStorage=false&maxLocations=1
           var client = new RestClient("http://www.mapquestapi.com/");
           var request = new RestRequest(
             resource: "/geocoding/v1/address?key=" + key + "&location=" + uea,

@@ -9,6 +9,8 @@ using System.Net;
 using System.Web;
 
 namespace moarutils.utils.gis.geocode {
+  //http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/find?text=1700 Penny ave washingtn dc&f=pjson&forStorage=false&maxLocations=1
+
   public static class ViaEsri {
     public static void Execute(
       out HttpStatusCode hsc,
@@ -35,10 +37,10 @@ namespace moarutils.utils.gis.geocode {
         }
 
         var uea = HttpUtility.UrlEncode(address.Trim());
-        //http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/find?text=1700 Penny ave washingtn dc&f=pjson&forStorage=false&maxLocations=1
+        var resource = "/arcgis/rest/services/World/GeocodeServer/find?text=" + uea + "&f=pjson&forStorage=false&maxLocations=1";
         var client = new RestClient("http://geocode.arcgis.com/");
         var request = new RestRequest(
-          resource: "/arcgis/rest/services/World/GeocodeServer/find?text=" + uea + "&f=pjson&forStorage=false&maxLocations=1",
+          resource: resource,
           method: Method.GET
         );
         if (wp != null) {
