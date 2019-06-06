@@ -1,17 +1,21 @@
 ﻿using MoarUtils.commands.strings;
+using MoarUtils.enums;
 using MoarUtils.Model;
+using MoarUtils.Utils;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
 using System.Net;
 using System.Threading;
 using System.Web;
 
-namespace MoarUtils.Utils.Gis.Geocode {
+namespace moarutils.utils.gis.geocode {
   public static class ViaGoogle {
     private const double m_dThrottleSeconds = .9; //1.725; //0.1; //100ms //Convert.ToDouble(1.725);
     private static DateTime dtLastRequest = DateTime.UtcNow;
     private static Mutex mLastRequest = new Mutex();
-    
+
     private static string GetUrlSecondPart(string location) {
       string locationUrl = "";
       if (!String.IsNullOrEmpty(location)) {
@@ -20,7 +24,13 @@ namespace MoarUtils.Utils.Gis.Geocode {
       return "maps/api/geocode/json?" + locationUrl + "&sensor=false";
     }
 
-    public static Coordinate Execute(string address, bool useRateLimit, WebProxy wp = null, int maxTriesIfQueryLimitReached = 1, bool throwOnUnableToGeocode = true) {
+    public static Coordinate Execute(
+      string address,
+      bool useRateLimit,
+      WebProxy wp = null,
+      int maxTriesIfQueryLimitReached = 1,
+      bool throwOnUnableToGeocode = true
+    ) {
       lock (mLastRequest) {
         //Force delay of 1.725 seconds between requests: re: http://groups.google.com/group/Google-Maps-API/browse_thread/thread/906e871bcb8c15fd
         TimeSpan tsDuration;
@@ -33,78 +43,130 @@ namespace MoarUtils.Utils.Gis.Geocode {
             Thread.Sleep(iMillisecondsToSleep);
           }
         } while (!bRequiredWaitTimeHasElapsed);
-        return Execute(address, wp, maxTriesIfQueryLimitReached, throwOnUnableToGeocode);
+
+        Execute(
+          hsc: out HttpStatusCode hsc,
+          status: out string status,
+          c: out Coordinate c,
+          address: address,
+          wp: wp,
+          maxTriesIfQueryLimitReached: maxTriesIfQueryLimitReached
+        );
+        if (hsc != HttpStatusCode.OK) {
+          LogIt.E("unable to geocode");
+        }
+        return c;
       }
     }
 
-    public static Coordinate Execute(string address, WebProxy wp = null, int maxTriesIfQueryLimitReached = 1, bool throwOnUnableToGeocode = true) {
+    public static void Execute(
+      out HttpStatusCode hsc,
+      out string status,
+      out Coordinate c,
+      string address,
+      WebProxy wp = null,
+      int maxTriesIfQueryLimitReached = 1
+    ) {
+      c = new Coordinate { g = Geocoder.Google };
+      hsc = HttpStatusCode.BadRequest;
+      status = "";
       try {
+        if (string.IsNullOrEmpty(address)) {
+          status = $"address required";
+          hsc = HttpStatusCode.BadRequest;
+          return;
+        }
+
         int trys = 1;
-        string lat = "", lng = "", location_type = "", status = "";
         do {
-          //var client = new RestClient("http://api.externalip.net/");
-          //var request = new RestRequest("ip", Method.GET);
           var client = new RestClient("http://maps.googleapis.com/");
-          var request = new RestRequest(GetUrlSecondPart(address), Method.GET);
-          request.RequestFormat = DataFormat.Json;
+          var request = new RestRequest(
+            resource: GetUrlSecondPart(address),
+            method: Method.GET,
+            dataFormat: DataFormat.Json
+          );
           if (wp != null) {
             client.Proxy = wp;
           }
           var response = client.Execute(request);
           if (response.ErrorException != null) {
-            throw response.ErrorException;
+            status = $"response had error exception: {response.ErrorException.Message}";
+            hsc = HttpStatusCode.BadRequest;
+            return;
+          }
+          if (response.StatusCode != HttpStatusCode.OK) {
+            status = $"StatusCode was {response.StatusCode}";
+            hsc = HttpStatusCode.BadRequest;
+            return;
+          }
+          if (string.IsNullOrWhiteSpace(response.Content)) {
+            status = $"content was empty";
+            hsc = HttpStatusCode.BadRequest;
+            return;
           }
           var content = response.Content;
-          dynamic json = Newtonsoft.Json.Linq.JObject.Parse(content);
+          dynamic json = JObject.Parse(content);
           status = json.status.Value;
           switch (status) {
             case "OK":
               var results = json.results;
 #if DEBUG
-                Console.WriteLine(results);
+              Console.WriteLine(results);
 #endif
-              lat = json.results[0].geometry.location.lat;
-              lng = json.results[0].geometry.location.lng;
-              location_type = json.results[0].geometry.location_type;
-              lat = (lat == null) ? "" : lat;
-              lng = (lng == null) ? "" : lng;
-              location_type = (location_type == null) ? "" : location_type;
-              return new Coordinate {
-                lat = Convert.ToDecimal(lat),
-                lng = Convert.ToDecimal(lng),
-                precision = location_type
-              };
+              var lat = json.results[0].geometry.location.lat;
+              lat = string.IsNullOrWhiteSpace(lat)
+                ? ""
+                : lat
+              ;
+              var lng = json.results[0].geometry.location.lng;
+              lng = string.IsNullOrWhiteSpace(lng)
+                ? ""
+                : lng
+              ;
+
+              var location_type = json.results[0].geometry.location_type;
+              location_type = (location_type == null)
+                ? ""
+                : location_type
+              ;
+              c.lat = Convert.ToDecimal(lat);
+              c.lng = Convert.ToDecimal(lng);
+              c.precision = location_type;
+              hsc = HttpStatusCode.OK;
+              return;
             case "UNKNOWN_ERROR":
               if (trys < maxTriesIfQueryLimitReached) {
                 Thread.Sleep(1000 * trys);
               }
               break;
             default:
-            case "OVER_QUERY_LIMIT":
-            case "REQUEST_DENIED":
-            case "INVALID_REQUEST":
-            case "ZERO_RESULTS":
-              throw new Exception(status);
+              //case "OVER_QUERY_LIMIT":
+              //case "REQUEST_DENIED":
+              //case "INVALID_REQUEST":
+              //case "ZERO_RESULTS":
+              status = $"status was {status}";
+              hsc = HttpStatusCode.BadRequest;
+              return;
           }
           trys++;
         } while (trys < maxTriesIfQueryLimitReached);
-        throw new Exception("unable to geocode:" + status);
+
+        status = $"unable to geocode";
+        hsc = HttpStatusCode.BadRequest;
+        return;
       } catch (Exception ex) {
-        LogIt.W(ex.Message + "|" + address);
-        if (throwOnUnableToGeocode) {
-          throw ex;
-        } else {
-          return new Coordinate {
-            lat = 0,
-            lng = 0
-            //TODO: denote error caught...
-          };
-        }
+        status = $"unexpected error";
+        hsc = HttpStatusCode.InternalServerError;
+        LogIt.E(ex);
       } finally {
         dtLastRequest = DateTime.UtcNow;
+        LogIt.I(JsonConvert.SerializeObject(new {
+          hsc,
+          status,
+          address,
+          c,
+        }, Formatting.Indented));
       }
     }
-
-
   }
 }

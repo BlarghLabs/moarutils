@@ -1,6 +1,7 @@
 using MoarUtils.commands.strings;
 using MoarUtils.enums;
 using MoarUtils.Model;
+using MoarUtils.Utils;
 using RestSharp;
 using System;
 using System.Net;
@@ -19,7 +20,7 @@ using System.Web;
 //https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22washington%20dc%22&format=json&diagnostics=true&callback=
 //https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20geo.placefinder%20where%20text%3D%22washington%20dc%22&format=json
 
-namespace MoarUtils.Utils.Gis.Geocode {
+namespace moarutils.utils.gis.geocode {
   public class ViaYahoo {
     public static Coordinate Execute(string location, WebProxy wp = null) {
       var c = new Coordinate { g = Geocoder.Yahoo };

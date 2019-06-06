@@ -1,73 +1,101 @@
 using MoarUtils.enums;
 using MoarUtils.Model;
 using MoarUtils.Utils;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
+using System.Net;
 using System.Web;
 
+//http://www.mapquestapi.com/geocoding/v1/address?key=KEY_HERE&location=lancaster%20pa
+//http://www.mapquestapi.com/geocoding/v1/address?key=KEY_HERE&callback=renderOptions&inFormat=kvp&outFormat=json&location=Lancaster,PA
 
-//http://dev.virtualearth.net/REST/v1/Locations/US/adminDistrict/locality/addressLine?includeNeighborhood=includeNeighborhood&include=includeValue&maxResults=maxResults&key=BingMapsKey
-//http://dev.virtualearth.net/REST/v1/Locations?query=locationQuery&includeNeighborhood=includeNeighborhood&include=includeValue&maxResults=maxResults&key=BingMapsKey
 //API Info:
 
 //Rate Limiting
 
-namespace MoarUtils.Utils.Gis.Geocode {
-  
-  public class ViaMapQuest{
-    
-    //http://www.mapquestapi.com/geocoding/v1/address?key=KEY_HERE&location=lancaster%20pa
-    //http://www.mapquestapi.com/geocoding/v1/address?key=KEY_HERE&callback=renderOptions&inFormat=kvp&outFormat=json&location=Lancaster,PA
-
-    public static Coordinate Execute(string address, string key) {
-      var c = new Coordinate { g= Geocoder.MapQuest };
+namespace moarutils.utils.gis.geocode {
+  public static class ViaMapQuest {
+    public static void Execute(
+      out HttpStatusCode hsc,
+      out string status,
+      out Coordinate c,
+      string address,
+      string key,
+      WebProxy wp = null
+    ) {
+      c = new Coordinate { g = Geocoder.MapQuest };
+      hsc = HttpStatusCode.BadRequest;
+      status = "";
 
       try {
-        if (!string.IsNullOrEmpty(address)) {
+        if (!string.IsNullOrEmpty(address) && !address.Equals("0")) {
           var uea = HttpUtility.UrlEncode(address.Trim());
 
+          //http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/find?text=1700 Penny ave washingtn dc&f=pjson&forStorage=false&maxLocations=1
           var client = new RestClient("http://www.mapquestapi.com/");
-          var request = new RestRequest("/geocoding/v1/address?key=" + key + "&location=" + uea, Method.GET);
+          var request = new RestRequest(
+            resource: "/geocoding/v1/address?key=" + key + "&location=" + uea,
+            method: Method.GET
+          );
+          if (wp != null) {
+            client.Proxy = wp;
+          }
           var response = client.Execute(request);
 
-          if (response.StatusCode != System.Net.HttpStatusCode.OK) {
-            LogIt.W($"status was {response.StatusCode}");
-            return c;
+          if (response.ErrorException != null) {
+            status = $"response had error exception: {response.ErrorException.Message}";
+            hsc = HttpStatusCode.BadRequest;
+            return;
           }
-          if (string.IsNullOrEmpty(response.Content)) {
-            LogIt.W($"content was empty");
-            return c;
+          if (response.StatusCode != HttpStatusCode.OK) {
+            status = $"StatusCode was {response.StatusCode}";
+            hsc = HttpStatusCode.BadRequest;
+            return;
+          }
+          if (string.IsNullOrWhiteSpace(response.Content)) {
+            status = $"content was empty";
+            hsc = HttpStatusCode.BadRequest;
+            return;
           }
 
           var content = response.Content;
-          dynamic json = Newtonsoft.Json.Linq.JObject.Parse(content);
+          dynamic json = JObject.Parse(content);
           var sc = (json.info.statuscode == null) ? -1 : json.info.statuscode.Value;
-
           if (sc != 0) {
-            var msg = (json.info.messages == null) ? "" : json.info.messages[0].Value;
-            LogIt.W(msg);
+            status = (json.info.messages == null)
+              ? ""
+              : json.info.messages[0].Value
+            ;
+            hsc = HttpStatusCode.BadRequest;
+            return;
+          }
 
-            //temp
-            //var js = json.results[0].locations[0].ToString();
-            //LogIt.D(js);
-          } else {
-            var lng = Convert.ToDecimal(json.results[0].locations[0].latLng.lng.Value);
-            var lat = Convert.ToDecimal(json.results[0].locations[0].latLng.lat.Value);
-            var pc = json.results[0].locations[0].geocodeQualityCode.Value; //A1XAX and A3XAX are bad country level precision
-
-            if ((lat != 0) && (lng != 0) && (pc != "A1XAX") && (pc != "A3XAX")) {
-              c.lng = lng;
-              c.lat = lat;
-              c.precision = pc;
-              //c.sGeocodePrecision = json.results[0].locations[0].geocodeQuality;
-            }
+          var lng = Convert.ToDecimal(json.results[0].locations[0].latLng.lng.Value);
+          var lat = Convert.ToDecimal(json.results[0].locations[0].latLng.lat.Value);
+          var pc = json.results[0].locations[0].geocodeQualityCode.Value; //A1XAX and A3XAX are bad country level precision
+          if ((lat != 0) && (lng != 0) && (pc != "A1XAX") && (pc != "A3XAX")) {
+            c.lng = lng;
+            c.lat = lat;
+            c.precision = pc;
+            //c.sGeocodePrecision = json.results[0].locations[0].geocodeQuality;
           }
         }
+        hsc = HttpStatusCode.OK;
+        return;
       } catch (Exception ex) {
+        status = $"unexpected error";
+        hsc = HttpStatusCode.InternalServerError;
         LogIt.E(ex);
+      } finally {
+        LogIt.I(JsonConvert.SerializeObject(new {
+          hsc,
+          status,
+          address,
+          c,
+        }, Formatting.Indented));
       }
-
-      return c;
     }
   }
 }

@@ -1,56 +1,105 @@
 ﻿using MoarUtils.enums;
 using MoarUtils.Model;
+using MoarUtils.Utils;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
+using System.Net;
 using System.Web;
 
-namespace MoarUtils.Utils.Gis.Geocode {
-  //note: ersi puts "0" in china, maybe ignore this one input?
-
-  public class ViaEsri {
-    public static Coordinate Execute(string address) {
-      var c = new Coordinate { g = Geocoder.Esri };
+namespace moarutils.utils.gis.geocode {
+  public static class ViaEsri {
+    public static void Execute(
+      out HttpStatusCode hsc,
+      out string status,
+      out Coordinate c,
+      string address,
+      WebProxy wp = null
+    ) {
+      c = new Coordinate { g = Geocoder.Esri };
+      hsc = HttpStatusCode.BadRequest;
+      status = "";
 
       try {
-        if (!string.IsNullOrEmpty(address) && !address.Equals("0")) {
-          var uea = HttpUtility.UrlEncode(address.Trim());
+        if (string.IsNullOrEmpty(address)) {
+          status = $"address required";
+          hsc = HttpStatusCode.BadRequest;
+          return;
+        }
+        //note: ersi puts "0" in china, maybe ignore this one input?
+        if (address.Equals("0")) {
+          status = $"0 is not properly geocoded by this provider";
+          hsc = HttpStatusCode.BadRequest;
+          return;
+        }
 
-          //http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/find?text=1700 Penny ave washingtn dc&f=pjson&forStorage=false&maxLocations=1
-          var client = new RestClient("http://geocode.arcgis.com/");
-          var request = new RestRequest("/arcgis/rest/services/World/GeocodeServer/find?text=" + uea + "&f=pjson&forStorage=false&maxLocations=1", Method.GET);
-          var response = client.Execute(request);
+        var uea = HttpUtility.UrlEncode(address.Trim());
+        //http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/find?text=1700 Penny ave washingtn dc&f=pjson&forStorage=false&maxLocations=1
+        var client = new RestClient("http://geocode.arcgis.com/");
+        var request = new RestRequest(
+          resource: "/arcgis/rest/services/World/GeocodeServer/find?text=" + uea + "&f=pjson&forStorage=false&maxLocations=1",
+          method: Method.GET
+        );
+        if (wp != null) {
+          client.Proxy = wp;
+        }
+        var response = client.Execute(request);
 
-          if (response.StatusCode != System.Net.HttpStatusCode.OK) {
-            LogIt.D(response.StatusCode + "|" + address);
-          } else {
-            var content = response.Content;
-            dynamic json = Newtonsoft.Json.Linq.JObject.Parse(content);
+        if (response.ErrorException != null) {
+          status = $"response had error exception: {response.ErrorException.Message}";
+          hsc = HttpStatusCode.BadRequest;
+          return;
+        }
+        if (response.StatusCode != HttpStatusCode.OK) {
+          status = $"StatusCode was {response.StatusCode}";
+          hsc = HttpStatusCode.BadRequest;
+          return;
+        }
+        if (string.IsNullOrWhiteSpace(response.Content)) {
+          status = $"content was empty";
+          hsc = HttpStatusCode.BadRequest;
+          return;
+        }
+        var content = response.Content;
+        dynamic json = JObject.Parse(content);
 
-            if (json.locations.Count > 0) {
-              var geometry = json.locations[0].feature.geometry;
-              if (geometry != null) {
-                var lng = Convert.ToDecimal(geometry.x.Value);
-                var lat = Convert.ToDecimal(geometry.y.Value);
-                if ((lat != 0) && (lng != 0)) {
-                  c.lng = lng;
-                  c.lat = lat;
-                }
-              }
-              var precision = json.locations[0].feature.attributes;
-              if (precision != null) {
-                var pc = precision.Score.Value;
-                c.precision = Convert.ToString(pc);
-              }            
+        if (json.locations.Count > 0) {
+          var geometry = json.locations[0].feature.geometry;
+          if (geometry != null) {
+            var lng = Convert.ToDecimal(geometry.x.Value);
+            var lat = Convert.ToDecimal(geometry.y.Value);
+            if ((lat != 0) && (lng != 0)) {
+              c.lng = lng;
+              c.lat = lat;
             }
           }
+          var precision = json.locations[0].feature.attributes;
+          if (precision != null) {
+            var pc = precision.Score.Value;
+            c.precision = Convert.ToString(pc);
+          }
         }
-      } catch (Exception ex) {
-        LogIt.W(address);
-        LogIt.E(ex);
-      }
 
-      return c;
+        hsc = HttpStatusCode.OK;
+        return;
+      } catch (Exception ex) {
+        status = $"unexpected error";
+        hsc = HttpStatusCode.InternalServerError;
+        LogIt.E(ex);
+      } finally {
+        LogIt.I(JsonConvert.SerializeObject(new {
+          hsc,
+          status,
+          address,
+          c,
+        }, Formatting.Indented));
+      }
     }
   }
 }
+
+
+
+
 

@@ -1,12 +1,10 @@
 ﻿using MoarUtils.Model;
+using MoarUtils.Utils;
 using RestSharp;
 using System;
-using System.Linq;
 using System.Net;
-using System.Threading;
-using System.Web;
 
-namespace MoarUtils.Utils.Gis.ReverseGeocode {
+namespace moarutils.utils.gis.reversegeocode {
 
   //https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=YOUR_API_KEY
   public static class ViaGoogle {

@@ -270,7 +270,7 @@
     <Compile Include="commands\aws\s3\FileLength.cs" />
     <Compile Include="commands\aws\s3\Get.cs" />
     <Compile Include="commands\aws\s3\Upload.cs" />
-    <Compile Include="commands\gis\ReverseGeocode\ViaGoogle.cs" />
+    <Compile Include="commands\gis\reversegeocode\ViaGoogle.cs" />
     <Compile Include="commands\hashing\GetSha1.cs" />
     <Compile Include="models\AreaCode.cs" />
     <Compile Include="models\DownloadFile.cs" />
@@ -295,9 +295,9 @@
     <Compile Include="commands\io\FileTypes.cs" />
     <Compile Include="commands\io\FileExtensions.cs" />
     <Compile Include="commands\geography\StateArray.cs" />
-    <Compile Include="commands\gis\Geocode\ViaEsri.cs" />
-    <Compile Include="commands\gis\Geocode\ViaMapQuest.cs" />
-    <Compile Include="commands\gis\Geocode\ViaYahoo.cs" />
+    <Compile Include="commands\gis\geocode\ViaEsri.cs" />
+    <Compile Include="commands\gis\geocode\ViaMapQuest.cs" />
+    <Compile Include="commands\gis\geocode\ViaYahoo.cs" />
     <Compile Include="commands\display\HumanReadableNumberSize.cs" />
     <Compile Include="commands\display\HumanReadableFileSize.cs" />
     <Compile Include="commands\io\IO.cs" />
@@ -315,7 +315,7 @@
     <Compile Include="commands\csv\CreateFile.cs" />
     <Compile Include="commands\DebugString.cs" />
     <Compile Include="commands\Dates.cs" />
-    <Compile Include="commands\gis\Geocode\ViaGoogle.cs" />
+    <Compile Include="commands\gis\geocode\ViaGoogle.cs" />
     <Compile Include="commands\gis\DistCalc.cs" />
     <Compile Include="commands\gis\GeocodeConversions.cs" />
     <Compile Include="commands\Email.cs" />
