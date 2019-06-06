@@ -12,7 +12,8 @@ namespace MoarUtils.commands.web {
     /// </summary>
     /// <returns></returns>
     public static string Execute(
-      HttpContext hc = null
+      HttpContext hc = null,
+      bool log = false
     ) {
       var remoteIpAddress = "";
       var xForwardedFor = "";
@@ -48,12 +49,14 @@ namespace MoarUtils.commands.web {
       } catch (Exception ex) {
         LogIt.E(ex);
       } finally {
-        LogIt.D(JsonConvert.SerializeObject(new {
-          ip,
-          remoteIpAddress,
-          xForwardedFor,
-          remoteAddr
-        }, Formatting.Indented));
+        if (log) {
+          LogIt.D(JsonConvert.SerializeObject(new {
+            ip,
+            remoteIpAddress,
+            xForwardedFor,
+            remoteAddr
+          }, Formatting.Indented));
+        }
       }
       return null;
     }

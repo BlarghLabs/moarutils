@@ -1,4 +1,5 @@
-﻿using MoarUtils.commands.validation;
+﻿using MoarUtils.commands.exceptions;
+using MoarUtils.commands.validation;
 using MoarUtils.enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -283,15 +284,18 @@ namespace MoarUtils.Utils {
           error.message = ex.Message;
           error.stackTrace = ex.StackTrace;
 
-          var validationMessage = "";
-          if (ExtractIfEntityValidationErrors(ex, out validationMessage)) {
+          if (ExtractIfEntityValidationErrors(ex, out string validationMessage)) {
             error.validationMessage = validationMessage;
           }
-          var innerMessage = "";
-          if (ExtractIfInnerException(ex, out innerMessage)) {
+          if (ExtractIfInnerException(ex, out string innerMessage)) {
             error.innerExceptionMessage = innerMessage;
           }
-          string json = JsonConvert.SerializeObject(error, Formatting.Indented);
+          var be = GetBaseException.Execute(ex);
+          if (be != null) {
+            error.baseExceptionMessage = be.Message;
+          }
+
+          var json = JsonConvert.SerializeObject(error, Formatting.Indented);
           Log(json, Severity.Error, fireEmailAsWell);
         }
       } catch {
