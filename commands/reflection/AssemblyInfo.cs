@@ -49,6 +49,10 @@ namespace MoarUtils.Utils {
       }
     }
 
-    
+    public static string VersionBuildNumber {
+      get {
+        return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+      }
+    }
   }
 }
