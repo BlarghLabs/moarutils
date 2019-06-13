@@ -44,5 +44,12 @@ namespace MoarUtils.commands.time {
         return years <= 1 ? "one year ago" : years + " years ago";
       }
     }
+
+    public static string ExecuteFromNullable(DateTime? dt) {
+      if (!dt.HasValue) {
+        return "";
+      }
+      return Execute(dt.Value);
+    }
   }
 }
