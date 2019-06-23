@@ -1,4 +1,4 @@
-﻿using MoarUtils.Utils;
+﻿using MoarUtils.commands.logging;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;

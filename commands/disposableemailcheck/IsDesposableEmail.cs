@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using MoarUtils.commands.logging;
+using RestSharp;
 using System;
 
 namespace MoarUtils.Utils.DisposableEmailCheck {

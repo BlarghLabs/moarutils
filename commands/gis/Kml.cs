@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using MoarUtils.commands.logging;
 
 namespace MoarUtils.Utils.Gis {
   public class Kml {

@@ -1,7 +1,7 @@
-﻿using MoarUtils.Model;
+﻿using MoarUtils.commands.logging;
+using MoarUtils.Model;
 using RestSharp;
 using System;
-
 
 namespace MoarUtils.Utils.GoogleAuth {
   public class ExchangeCodeForTokens {

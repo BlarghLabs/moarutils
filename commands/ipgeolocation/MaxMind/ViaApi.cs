@@ -3,6 +3,7 @@ using MaxMind.GeoIP2;
 using MaxMind.GeoIP2.Responses;
 using System;
 using System.Threading;
+using MoarUtils.commands.logging;
 
 namespace MoarUtils.Utils.IpGeolocation.Maxmind {
   public class ViaApi {

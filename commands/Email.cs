@@ -1,4 +1,5 @@
-﻿using MoarUtils.enums;
+﻿using MoarUtils.commands.logging;
+using MoarUtils.enums;
 using System;
 using System.ComponentModel;
 using System.Configuration;

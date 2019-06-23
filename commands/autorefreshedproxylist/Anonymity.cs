@@ -1,4 +1,4 @@
-﻿using MoarUtils.Utils;
+﻿using MoarUtils.commands.logging;
 using MoarUtils.Utils.Proxy;
 using System;
 using System.Collections.Generic;

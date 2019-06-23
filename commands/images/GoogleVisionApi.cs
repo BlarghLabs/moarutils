@@ -2,6 +2,7 @@
 using Google.Apis.Services;
 using Google.Apis.Vision.v1;
 using Google.Apis.Vision.v1.Data;
+using MoarUtils.commands.logging;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

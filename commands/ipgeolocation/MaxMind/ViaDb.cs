@@ -1,6 +1,7 @@
 ﻿using MaxMind.GeoIP2;
 using MaxMind.GeoIP2.Model;
 using MaxMind.GeoIP2.Responses;
+using MoarUtils.commands.logging;
 using System;
 using System.Collections.Generic;
 using System.Threading;

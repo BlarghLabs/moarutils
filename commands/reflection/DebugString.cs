@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using ObjectDumper;
 using Newtonsoft.Json;
+using MoarUtils.commands.logging;
 
 namespace MoarUtils.Utils {
   public class DebugString {

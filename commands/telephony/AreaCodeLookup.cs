@@ -1,5 +1,5 @@
 ﻿using MoarUtils.Model;
-using MoarUtils.Utils;
+using MoarUtils.commands.logging;
 using MoarUtils.Utils.Geography;
 using Newtonsoft.Json.Linq;
 using PhoneNumbers;

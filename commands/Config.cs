@@ -1,7 +1,7 @@
-﻿using MoarUtils.enums;
+﻿using MoarUtils.commands.logging;
 using System;
 using System.Configuration;
-using static MoarUtils.Utils.LogIt;
+using static MoarUtils.commands.logging.LogIt;
 
 namespace MoarUtils.Utils {
 

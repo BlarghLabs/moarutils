@@ -1,7 +1,7 @@
 ﻿using MoarUtils.commands.strings;
 using MoarUtils.enums;
 using MoarUtils.Model;
-using MoarUtils.Utils;
+using MoarUtils.commands.logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;

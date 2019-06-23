@@ -1,6 +1,6 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
-using MoarUtils.Utils;
+using MoarUtils.commands.logging;
 using System;
 
 namespace MoarUtils.Utils.AWS.S3 {

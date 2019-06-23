@@ -1,7 +1,7 @@
 ﻿using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
-using MoarUtils.Utils;
+using MoarUtils.commands.logging;
 using System;
 using System.IO;
 

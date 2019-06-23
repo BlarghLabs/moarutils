@@ -1,4 +1,4 @@
-﻿using MoarUtils.Utils;
+﻿using MoarUtils.commands.logging;
 using System;
 using System.Web;
 

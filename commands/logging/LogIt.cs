@@ -1,6 +1,7 @@
 ﻿using MoarUtils.commands.exceptions;
 using MoarUtils.commands.validation;
 using MoarUtils.enums;
+using MoarUtils.commands.logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -16,11 +17,12 @@ using System.Text;
 using System.Threading;
 using System.Timers;
 using System.Web;
+using MoarUtils.Utils;
 //using Twilio;
 
 //TODO: rewite this using trace and not filehandlers
 
-namespace MoarUtils.Utils {
+namespace MoarUtils.commands.logging {
   public sealed class LogIt {
     public enum Severity {
       Debug = 0,

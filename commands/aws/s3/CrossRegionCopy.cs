@@ -1,4 +1,5 @@
 ﻿using Amazon;
+using MoarUtils.commands.logging;
 using System;
 using System.Diagnostics;
 using System.IO;

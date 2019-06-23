@@ -1,5 +1,5 @@
 ﻿using MoarUtils.Model;
-using MoarUtils.Utils;
+using MoarUtils.commands.logging;
 using RestSharp;
 using System;
 using System.Net;
