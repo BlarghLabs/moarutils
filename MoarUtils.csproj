@@ -104,10 +104,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>..\..\pieteip\trunk\code\win\packages\AWSSDK.Core.3.3.102.2\lib\net45\AWSSDK.Core.dll</HintPath>
+      <HintPath>packages\AWSSDK.Core.3.3.103.11\lib\net45\AWSSDK.Core.dll</HintPath>
     </Reference>
     <Reference Include="AWSSDK.S3, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>packages\AWSSDK.S3.3.3.102.3\lib\net45\AWSSDK.S3.dll</HintPath>
+      <HintPath>packages\AWSSDK.S3.3.3.103.4\lib\net45\AWSSDK.S3.dll</HintPath>
     </Reference>
     <Reference Include="DotNetZip, Version=1.13.3.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>packages\DotNetZip.1.13.3\lib\net40\DotNetZip.dll</HintPath>
@@ -373,12 +373,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <!--<Analyzer Include="..\packages\AWSSDK.S3.3.3.31.20\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
-    <Analyzer Include="packages\AWSSDK.S3.3.3.102.1\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />-->
-    <Analyzer Include="packages\AWSSDK.S3.3.3.102.3\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
+    <Folder Include="extensions\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="extensions\" />
+    <Analyzer Include="packages\AWSSDK.S3.3.3.103.4\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
