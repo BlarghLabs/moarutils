@@ -245,6 +245,7 @@
     <Compile Include="commands\web\GetExecutingUsername.cs" />
     <Compile Include="commands\web\GetPublicIpAddress.cs" />
     <Compile Include="commands\web\UnauthenticatedUser.cs" />
+    <Compile Include="commands\web\UserImpersonation.cs" />
     <Compile Include="enums\DesiredProxyType.cs" />
     <Compile Include="enums\GeocodeSource.cs" />
     <Compile Include="enums\UserMsgFormat.cs" />
