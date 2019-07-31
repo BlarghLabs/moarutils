@@ -39,17 +39,25 @@ namespace MoarUtils.commands.time {
       if (delta < 12 * MONTH) {
         var months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
         var monthsDouble = (double)ts.Days / (double)30;
-
         return monthsDouble <= 1 
           ? "one month ago" 
-          : monthsDouble.ToString("n1") + " months ago"
+          : (
+            monthsDouble.ToString("n1").EndsWith(".0")
+              ? months + " months ago"
+              : monthsDouble.ToString("n1") + " months ago"
+          )
         ;
       } else {
         var years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
-        var yearDouble = (double)ts.Days / (double)365;
-        return yearDouble <= 1 
-          ? "one year ago" 
-          : yearDouble.ToString("n1") + " years ago";
+        var yearsDouble = (double)ts.Days / (double)365;
+        return yearsDouble <= 1
+          ? "one year ago"
+          : (
+            yearsDouble.ToString("n1").EndsWith(".0")
+              ? years + " years ago"
+              : yearsDouble.ToString("n1") + " years ago"
+          )
+        ;
       }
     }
 
