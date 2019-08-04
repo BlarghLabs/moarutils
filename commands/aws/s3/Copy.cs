@@ -63,6 +63,7 @@ namespace MoarUtils.Utils.AWS.S3 {
             CannedACL = s3ca
           };
           if (!string.IsNullOrWhiteSpace(contentType)) {
+            request.MetadataDirective = S3MetadataDirective.REPLACE;
             request.ContentType = contentType;
           }
           var response = s3c.CopyObject(request);
