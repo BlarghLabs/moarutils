@@ -6,7 +6,7 @@ using System.IO;
 using System.Xml;
 using MoarUtils.commands.logging;
 
-namespace MoarUtils.Utils.Gis {
+namespace MoarUtils.commands.gis {
   public class Kml {
     public const decimal DEFAULT_ICON_SCALE = (decimal)0.5;
     public const decimal DEFAULT_LABEL_SCALE = (decimal)0.5;
