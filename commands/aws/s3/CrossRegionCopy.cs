@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.IO;
 
 namespace MoarUtils.Utils.AWS.S3 {
-  public class S3CrossRegionCopy {
+  public class CrossRegionCopy {
     /// <summary>
     /// requires aws cli to be configured
     /// </summary>
@@ -29,7 +29,7 @@ namespace MoarUtils.Utils.AWS.S3 {
       try {
         string destUrl;
         if (Exists.Execute(
-          fileKey: destKey,
+          key: destKey,
           bucketName: destBucketName,
           url: out destUrl,
           re: destRegionEndpoint,
@@ -41,7 +41,7 @@ namespace MoarUtils.Utils.AWS.S3 {
 
         string sourceUrl;
         if (!Exists.Execute(
-          fileKey: sourceKey,
+          key: sourceKey,
           bucketName: sourceBucketName,
           url: out sourceUrl,
           re: sourceRegionEndpoint,
@@ -92,7 +92,7 @@ namespace MoarUtils.Utils.AWS.S3 {
 
         //check
         var exists = Exists.Execute(
-          fileKey: destKey,
+          key: destKey,
           bucketName: destBucketName,
           url: out destUrl, re: destRegionEndpoint,
           AWSAccessKey: AWSAccessKey,

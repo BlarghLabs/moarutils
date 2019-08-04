@@ -4,7 +4,7 @@ using MoarUtils.commands.logging;
 using System;
 
 namespace MoarUtils.Utils.AWS.S3 {
-  public class S3FileLength {
+  public class FileLength {
     public static long Execute(
       string AWSAccessKey,
       string AWSSecretKey,

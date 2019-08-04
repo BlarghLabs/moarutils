@@ -5,26 +5,29 @@ using MoarUtils.commands.logging;
 using System;
 
 namespace MoarUtils.Utils.AWS.S3 {
-  public class S3Copy {
+  public class Copy {
     public static bool Execute(
       string AWSAccessKey,
       string AWSSecretKey,
-      RegionEndpoint regionEndpoint,
+      RegionEndpoint re,
       string sourceBucketName,
       string sourceKey,
       string destBucketName,
-      string destKey
-    //out long? fileLengthBytes
+      string destKey,
+      S3CannedACL s3ca,
+      string contentType = null
+      //out long? fileLengthBytes
     ) {
+      //note: not vlidating cannced acls
       //fileLengthBytes = null;
       try {
         //validate exists
         string sourceUrl;
         if (!Exists.Execute(
-          fileKey: sourceKey,
+          key: sourceKey,
           bucketName: sourceBucketName,
           url: out sourceUrl,
-          re: regionEndpoint,
+          re: re,
           AWSAccessKey: AWSAccessKey,
           AWSSecretKey: AWSSecretKey
         )) {
@@ -35,10 +38,10 @@ namespace MoarUtils.Utils.AWS.S3 {
         //validate dest doesn't already exist, fail if it does bc we aren't validating that it is different? maybe shar eeach in future?
         string destUrl;
         if (Exists.Execute(
-          fileKey: destKey,
+          key: destKey,
           bucketName: destBucketName,
           url: out destUrl,
-          re: regionEndpoint,
+          re: re,
           AWSAccessKey: AWSAccessKey,
           AWSSecretKey: AWSSecretKey
         )) {
@@ -50,16 +53,21 @@ namespace MoarUtils.Utils.AWS.S3 {
         using (var s3c = new AmazonS3Client(
           awsAccessKeyId: AWSAccessKey,
           awsSecretAccessKey: AWSSecretKey,
-          region: regionEndpoint
+          region: re
         )) {
-          var cor = s3c.CopyObject(new CopyObjectRequest {
+          var request = new CopyObjectRequest {
             SourceBucket = sourceBucketName,
             SourceKey = sourceKey,
             DestinationBucket = destBucketName,
-            DestinationKey = destKey
-          });
+            DestinationKey = destKey,
+            CannedACL = s3ca
+          };
+          if (!string.IsNullOrWhiteSpace(contentType)) {
+            request.ContentType = contentType;
+          }
+          var response = s3c.CopyObject(request);
+          return response.HttpStatusCode == System.Net.HttpStatusCode.OK;
           //fileLengthBytes = cor.
-          return cor.HttpStatusCode == System.Net.HttpStatusCode.OK;
         }
       } catch (Exception ex) {
         LogIt.E(ex);
