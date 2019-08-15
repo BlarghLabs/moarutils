@@ -27,7 +27,6 @@
       <frameworkAssembly assemblyName="Microsoft.Web.Infrastructure" targetFramework="net452" />
       <frameworkAssembly assemblyName="System.Net.Http.WebRequest" targetFramework="net452" />
       <frameworkAssembly assemblyName="System.Web" targetFramework="net452" />
-      <!--<frameworkAssembly assemblyName="" targetFramework="net452" />-->
       <frameworkAssembly assemblyName="System.Web.Helpers"  targetFramework="net452" />
       <frameworkAssembly assemblyName="System.Web.Http" targetFramework="net452" />
       <frameworkAssembly assemblyName="System.Web.Mvc" targetFramework="net452" />
