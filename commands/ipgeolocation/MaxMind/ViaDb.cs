@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace MoarUtils.Utils.IpGeolocation.Maxmind {
+namespace MoarUtils.commands.ipgeolocation.maxmind {
   public class ViaDb {
     public static int MAXMIND_WS_USER_ID;
     public static string MAXMIND_WS_KEY;

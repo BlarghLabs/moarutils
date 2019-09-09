@@ -48,8 +48,9 @@ namespace MoarUtils.Utils.Slack {
           RequestFormat = DataFormat.Json,
         };
         content = h + content.Replace("\"", "'");
-        request.AddBody(new {
-          text = content
+        //was: .AddBody
+        request.AddJsonBody(new {
+        text = content
         });
 
         var response = client.Execute(request);
