@@ -38,7 +38,7 @@ namespace moarutils.utils.gis.geocode {
 
         var uea = HttpUtility.UrlEncode(address.Trim());
         var resource = "/arcgis/rest/services/World/GeocodeServer/find?text=" + uea + "&f=pjson&forStorage=false&maxLocations=1";
-        var client = new RestClient("http://geocode.arcgis.com/");
+        var client = new RestClient("https://geocode.arcgis.com/"); //https?
         var request = new RestRequest(
           resource: resource,
           method: Method.GET

@@ -32,7 +32,7 @@ namespace moarutils.utils.gis.geocode {
       try {
         if (!string.IsNullOrEmpty(address) && !address.Equals("0")) {
           var uea = HttpUtility.UrlEncode(address.Trim());
-          var client = new RestClient("http://www.mapquestapi.com/");
+          var client = new RestClient("https://www.mapquestapi.com/");
           var request = new RestRequest(
             resource: "/geocoding/v1/address?key=" + key + "&location=" + uea,
             method: Method.GET
