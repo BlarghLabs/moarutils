@@ -25,15 +25,8 @@ namespace MoarUtils.commands.web {
     /// <param name="userName"></param>
     /// <param name="returnUrl"></param>
     public static void ImpersonateUser(string userName, string returnUrl) {
-
-      // Declare variables
-      HttpContext context;
-      FormsAuthenticationTicket authTicket;
-      HttpCookie authCookie;
-      string strSerializedData;
-
       // Check if a HttpContext is available and a user is currently logged in.
-      context = HttpContext.Current;
+      var context = HttpContext.Current;
       if (context == null)
         throw new InvalidOperationException("No HttpContext available. Unable to impersonate user.");
       if (context.User.Identity == null)
@@ -42,9 +35,9 @@ namespace MoarUtils.commands.web {
         throw new InvalidOperationException("No user is currently authenticated. Unable to impersonate user.");
 
       // Store impersonation data in authentication ticket.
-      strSerializedData = Serialize(context.User.Identity.Name, returnUrl);
-      authCookie = FormsAuthentication.GetAuthCookie(userName, false);
-      authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+      var strSerializedData = Serialize(context.User.Identity.Name, returnUrl);
+      var authCookie = FormsAuthentication.GetAuthCookie(userName, false);
+      var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
       authTicket = new FormsAuthenticationTicket(authTicket.Version, authTicket.Name, authTicket.IssueDate, authTicket.Expiration,
           authTicket.IsPersistent, strSerializedData, authTicket.CookiePath);
       authCookie.Value = FormsAuthentication.Encrypt(authTicket);
@@ -63,14 +56,8 @@ namespace MoarUtils.commands.web {
     /// </summary>
     /// <param name="redirect"></param>
     public static void Deimpersonate(bool redirect) {
-
-      // Declare variables
-      HttpContext context;
-      FormsIdentity formsIdentity;
-      string strUserName, strReturnUrl;
-
       // Check if a HttpContext is available and a user is currently logged in.
-      context = HttpContext.Current;
+      var context = HttpContext.Current;
       if (context == null)
         throw new InvalidOperationException("No HttpContext available. Unable to complete operation.");
 
@@ -81,16 +68,21 @@ namespace MoarUtils.commands.web {
         return;
 
       // Get data from auth ticket
-      formsIdentity = (FormsIdentity)context.User.Identity;
+      var formsIdentity = (FormsIdentity)context.User.Identity;
       if (string.IsNullOrEmpty(formsIdentity.Ticket.UserData))
         return;
-      if (!Deserialize(formsIdentity.Ticket.UserData, out strUserName, out strReturnUrl))
+      if (!Deserialize(formsIdentity.Ticket.UserData, out string strUserName, out string strReturnUrl))
         return;
 
       // Set new auth cookie and redirect user if asked to do so.
       FormsAuthentication.SetAuthCookie(strUserName, false);
-      if (!string.IsNullOrEmpty(strReturnUrl) && redirect)
+      if (
+        !string.IsNullOrEmpty(strReturnUrl)
+        && redirect
+      ) {
         context.Response.Redirect(strReturnUrl);
+      }
+
     }
 
     /// <summary>
@@ -98,14 +90,8 @@ namespace MoarUtils.commands.web {
     /// </summary>
     public static string PrevUserName {
       get {
-
-        // Declare variables
-        HttpContext context;
-        FormsIdentity formsIdentity;
-        string strUserName, strReturnUrl;
-
         // Check if a HttpContext is available and a user is currently logged in.
-        context = HttpContext.Current;
+        var context = HttpContext.Current;
         if (context == null)
           throw new InvalidOperationException("No HttpContext available. Unable to complete operation.");
 
@@ -116,10 +102,10 @@ namespace MoarUtils.commands.web {
           return string.Empty;
 
         // Get data from auth ticket
-        formsIdentity = (FormsIdentity)context.User.Identity;
+        var formsIdentity = (FormsIdentity)context.User.Identity;
         if (string.IsNullOrEmpty(formsIdentity.Ticket.UserData))
           return string.Empty;
-        if (!Deserialize(formsIdentity.Ticket.UserData, out strUserName, out strReturnUrl))
+        if (!Deserialize(formsIdentity.Ticket.UserData, out string strUserName, out string strReturnUrl))
           return string.Empty;
 
         return strUserName;
@@ -131,14 +117,8 @@ namespace MoarUtils.commands.web {
     /// </summary>
     public static bool IsImpersonating {
       get {
-
-        // Declare variables
-        HttpContext context;
-        FormsIdentity formsIdentity;
-        string strUserName, strReturnUrl;
-
         // Check if a HttpContext is available and a user is currently logged in.
-        context = HttpContext.Current;
+        var context = HttpContext.Current;
         if (context == null)
           throw new InvalidOperationException("No HttpContext available. Unable to complete operation.");
 
@@ -149,10 +129,10 @@ namespace MoarUtils.commands.web {
           return false;
 
         // Get data from auth ticket
-        formsIdentity = (FormsIdentity)context.User.Identity;
+        var formsIdentity = (FormsIdentity)context.User.Identity;
         if (string.IsNullOrEmpty(formsIdentity.Ticket.UserData))
           return false;
-        return Deserialize(formsIdentity.Ticket.UserData, out strUserName, out strReturnUrl);
+        return Deserialize(formsIdentity.Ticket.UserData, out string strUserName, out string strReturnUrl);
       }
     }
 
@@ -174,17 +154,13 @@ namespace MoarUtils.commands.web {
     /// <param name="returnUrl"></param>
     /// <returns></returns>
     private static bool Deserialize(string data, out string userName, out string returnUrl) {
-
-      Regex splitRegex;
-      string[] pieces;
-
       // Set default return values
       userName = null;
       returnUrl = null;
 
       // Attempt to deserialize data
-      splitRegex = new Regex("(?<!:):(?!:)");
-      pieces = splitRegex.Split(data);
+      var splitRegex = new Regex("(?<!:):(?!:)");
+      var pieces = splitRegex.Split(data);
       if (pieces.Length != 2)
         return false;
 
