@@ -43,9 +43,9 @@ namespace moarutils.utils.gis.geocode {
         }
 
         var rgx = new Regex(@"[^\w\s]*");
-        var addressCheck = rgx.Replace(address.Trim(), "");
+        var addressCheck = rgx.Replace(address.Trim(), "").Trim();
         if (string.IsNullOrWhiteSpace(addressCheck)) {
-          status = $"address had no numbers or letters";
+          status = $"address had no numbers or letters: " + address.Trim();
           hsc = HttpStatusCode.BadRequest;
           return;
         }
