@@ -6,6 +6,7 @@ namespace MoarUtils.enums {
     Yahoo,
     MapQuest,
     Microsoft,
-    Esri
+    Esri,
+    Geocodio
   }
 }

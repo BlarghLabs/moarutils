@@ -10,17 +10,18 @@ using System.Web;
 using System.Text.RegularExpressions;
 
 namespace moarutils.utils.gis.geocode {
-  //http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/find?text=1700 Penny ave washingtn dc&f=pjson&forStorage=false&maxLocations=1
+  //curl "https://api.geocod.io/v1.4/geocode?q=1109+N+Highland+St%2c+Arlington+VA&api_key=YOUR_API_KEY"
 
-  public static class ViaEsri {
+  public static class ViaGeocodio {
     public static void Execute(
       out HttpStatusCode hsc,
       out string status,
       out Coordinate c,
       string address,
+      string key,
       WebProxy wp = null
     ) {
-      c = new Coordinate { g = Geocoder.Esri };
+      c = new Coordinate { g = Geocoder.Geocodio };
       hsc = HttpStatusCode.BadRequest;
       status = "";
 
@@ -37,10 +38,10 @@ namespace moarutils.utils.gis.geocode {
           return;
         }
 
-        if (address.Length > 200) {
-          LogIt.W("address was > 200 length, truncating: " + address);
-          address = address.Substring(0, 200);
-        }
+        //if (address.Length > 200) {
+        //  LogIt.W("address was > 200 length, truncating: " + address);
+        //  address = address.Substring(0, 200);
+        //}
 
         var rgx = new Regex(@"[^\w\s]*");
         var addressCheck = rgx.Replace(address.Trim(), "").Trim();
@@ -51,8 +52,9 @@ namespace moarutils.utils.gis.geocode {
         }
 
         var uea = HttpUtility.UrlEncode(address.Trim());
-        var resource = "/arcgis/rest/services/World/GeocodeServer/find?text=" + uea + "&f=pjson&forStorage=false&maxLocations=1";
-        var client = new RestClient("https://geocode.arcgis.com/");
+        //geocode?q=1109+N+Highland+St%2c+Arlington+VA&api_key=YOUR_API_KEY"
+        var resource = $"geocode?api_key={key}&limit=1&q=" + uea; // + "&f=pjson&forStorage=false&maxLocations=1";
+        var client = new RestClient("https://api.geocod.io/v1.4/");
         var request = new RestRequest(
           resource: resource,
           method: Method.GET
@@ -80,28 +82,30 @@ namespace moarutils.utils.gis.geocode {
         var content = response.Content;
         dynamic json = JObject.Parse(content);
 
-        if ((json.locations == null) || (json.locations.Count == 0)) {
+        if ((json.results == null) || (json.results.Count == 0)) {
           //maybe look at: json.error.code.Value
           LogIt.W(content);
-          status = $"location result was null";
+          status = $"results was null";
           hsc = HttpStatusCode.BadRequest;
           return;
         }
 
-
-        var geometry = json.locations[0].feature.geometry;
-        if (geometry != null) {
-          var lng = Convert.ToDecimal(geometry.x.Value);
-          var lat = Convert.ToDecimal(geometry.y.Value);
+        var location = json.results[0].location;
+        if (location != null) {
+          var lng = Convert.ToDecimal(location.lat.Value);
+          var lat = Convert.ToDecimal(location.lng.Value);
           if ((lat != 0) && (lng != 0)) {
             c.lng = lng;
             c.lat = lat;
           }
         }
-        var precision = json.locations[0].feature.attributes;
+        var precision = json.results[0].accuracy_type.Value;
         if (precision != null) {
-          var pc = precision.Score.Value;
-          c.precision = Convert.ToString(pc);
+          c.precision = precision;
+        }
+
+        if (c.lat <= 0 || c.lng <= 0) {
+          LogIt.W("here");
         }
 
         hsc = HttpStatusCode.OK;

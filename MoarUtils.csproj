@@ -235,6 +235,7 @@
   <ItemGroup>
     <Compile Include="commands\aws\s3\UpdateContentType.cs" />
     <Compile Include="commands\exceptions\GetBaseException.cs" />
+    <Compile Include="commands\gis\geocode\ViaGeocodio.cs" />
     <Compile Include="commands\lists\SplitList.cs" />
     <Compile Include="commands\strings\StripStrFromBegAndEnd.cs" />
     <Compile Include="commands\strings\Truncate.cs" />
