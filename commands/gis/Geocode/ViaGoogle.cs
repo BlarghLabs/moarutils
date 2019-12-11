@@ -16,12 +16,12 @@ namespace moarutils.utils.gis.geocode {
     private static DateTime dtLastRequest = DateTime.UtcNow;
     private static Mutex mLastRequest = new Mutex();
 
-    private static string GetUrlSecondPart(string location) {
+    private static string GetUrlSecondPart(string location, string key = null) {
       string locationUrl = "";
       if (!String.IsNullOrEmpty(location)) {
         locationUrl = "address=" + Uri.EscapeDataString(CondenseWhiteSpace.Execute(HttpUtility.UrlEncode(location.Replace("+", " "))));
       }
-      return "maps/api/geocode/json?" + locationUrl + "&sensor=false";
+      return "maps/api/geocode/json?" + locationUrl + "&sensor=false" + (string.IsNullOrEmpty(key) ? "" : $"&key={key}");
     }
 
     public static Coordinate Execute(
@@ -29,7 +29,8 @@ namespace moarutils.utils.gis.geocode {
       bool useRateLimit,
       WebProxy wp = null,
       int maxTriesIfQueryLimitReached = 1,
-      bool throwOnUnableToGeocode = true
+      bool throwOnUnableToGeocode = true,
+      string key = null
     ) {
       lock (mLastRequest) {
         //Force delay of 1.725 seconds between requests: re: http://groups.google.com/group/Google-Maps-API/browse_thread/thread/906e871bcb8c15fd
@@ -50,6 +51,7 @@ namespace moarutils.utils.gis.geocode {
           c: out Coordinate c,
           address: address,
           wp: wp,
+          key: key,
           maxTriesIfQueryLimitReached: maxTriesIfQueryLimitReached
         );
         if (hsc != HttpStatusCode.OK) {
@@ -65,7 +67,8 @@ namespace moarutils.utils.gis.geocode {
       out Coordinate c,
       string address,
       WebProxy wp = null,
-      int maxTriesIfQueryLimitReached = 1
+      int maxTriesIfQueryLimitReached = 1,
+      string key = null
     ) {
       c = new Coordinate { g = Geocoder.Google };
       hsc = HttpStatusCode.BadRequest;
@@ -79,9 +82,9 @@ namespace moarutils.utils.gis.geocode {
 
         int trys = 1;
         do {
-          var client = new RestClient("http://maps.googleapis.com/");
+          var client = new RestClient("https://maps.googleapis.com/");
           var request = new RestRequest(
-            resource: GetUrlSecondPart(address),
+            resource: GetUrlSecondPart(address, key),
             method: Method.GET,
             dataFormat: DataFormat.Json
           );
@@ -113,12 +116,12 @@ namespace moarutils.utils.gis.geocode {
 #if DEBUG
               Console.WriteLine(results);
 #endif
-              var lat = json.results[0].geometry.location.lat;
+              var lat = json.results[0].geometry.location.lat.ToString();
               lat = string.IsNullOrWhiteSpace(lat)
                 ? ""
                 : lat
               ;
-              var lng = json.results[0].geometry.location.lng;
+              var lng = json.results[0].geometry.location.lng.ToString();
               lng = string.IsNullOrWhiteSpace(lng)
                 ? ""
                 : lng
