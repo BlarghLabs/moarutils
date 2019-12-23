@@ -104,7 +104,7 @@ namespace moarutils.utils.gis.geocode {
           c.precision = precision;
         }
 
-        if (c.lat <= 0 || c.lng <= 0) {
+        if (c.lat == 0 || c.lng == 0) {
           LogIt.W("here");
         }
 

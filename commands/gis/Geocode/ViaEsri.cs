@@ -84,7 +84,7 @@ namespace moarutils.utils.gis.geocode {
           //maybe look at: json.error.code.Value
           LogIt.W(content);
           status = $"location result was null";
-          hsc = HttpStatusCode.BadRequest;
+          hsc = HttpStatusCode.OK;
           return;
         }
 
