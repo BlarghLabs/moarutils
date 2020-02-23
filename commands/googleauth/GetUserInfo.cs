@@ -16,7 +16,9 @@ namespace MoarUtils.Utils.GoogleAuth {
     public class response {
       public string accessToken { get; set; }
       public string email { get; set; }
-
+      public string picture { get; set; }
+      public string id { get; set; }
+      public bool verifiedEmail { get; set; }
     }
 
     public static void Execute(
@@ -59,10 +61,53 @@ namespace MoarUtils.Utils.GoogleAuth {
         var request = new RestRequest("oauth2/v2/userinfo", Method.GET);
         request.AddHeader("Authorization", "Bearer " + r.accessToken); //Authorization: Bearer XXX
         var response = client.Execute(request);
-        content = response.Content;  //{ "id": "XXX", "email": "foo@bar.com", "verified_email": true}
 
+        if (response.StatusCode != HttpStatusCode.OK) {
+          status = $"StatusCode was {response.StatusCode}";
+          hsc = HttpStatusCode.BadRequest;
+          return;
+        }
+        if (response.ErrorException != null) {
+          status = $"response had error exception: {response.ErrorException.Message}";
+          hsc = HttpStatusCode.BadRequest;
+          return;
+        }
+        if (string.IsNullOrWhiteSpace(response.Content)) {
+          status = $"content was empty";
+          hsc = HttpStatusCode.BadRequest;
+          return;
+        }
+
+        content = response.Content;  
         dynamic json = JsonConvert.DeserializeObject(content);
-        r.email = json.email.Value;
+
+        #region cheat sheet
+        //{
+        //  {
+        //    "id": "123456789012345678901",
+        //    "email": "foo@bar.baz",
+        //    "verified_email": true,
+        //    "picture": "https://lh3.googleusercontent.com/a-/1111111111111111111111111111111111111111111111"
+        // }
+        //}
+        #endregion
+
+        r.email = json.email == null
+          ? null
+          : json.email.Value
+        ;
+        r.picture = json.picture == null 
+          ? null 
+          : json.picture.Value
+        ;
+        r.id = json.id == null
+          ? null
+          : json.id.Value
+        ; 
+        r.verifiedEmail = json.verified_email == null
+          ? false
+          : json.verified_email.Value
+        ; 
 
         hsc = HttpStatusCode.OK;
         return;

@@ -1,8 +1,6 @@
-﻿using RestSharp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
 
 namespace MoarUtils.Utils.GoogleAuth {
   public class GenerateGoogleOAuthUrl {
@@ -35,18 +33,18 @@ namespace MoarUtils.Utils.GoogleAuth {
     }
 
     public static string UrlEncodeForGoogle(string url) {
-      string UnReservedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~";
-      var result = new StringBuilder();
+      var unReservedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.~";
+      var sb = new StringBuilder();
 
       foreach (char symbol in url) {
-        if (UnReservedChars.IndexOf(symbol) != -1) {
-          result.Append(symbol);
+        if (unReservedChars.IndexOf(symbol) != -1) {
+          sb.Append(symbol);
         } else {
-          result.Append('%' + String.Format("{0:X2}", (int)symbol));
+          sb.Append('%' + String.Format("{0:X2}", (int)symbol));
         }
       }
 
-      return result.ToString();
+      return sb.ToString();
     }
   }
 }
