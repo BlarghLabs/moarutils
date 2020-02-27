@@ -95,7 +95,7 @@ namespace MoarUtils.Utils.GoogleAuth {
         LogIt.I(JsonConvert.SerializeObject(new {
           hsc,
           status,
-          m,
+          //m,
           //r,
         }));
       }
