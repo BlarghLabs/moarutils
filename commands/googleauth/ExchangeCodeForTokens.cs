@@ -91,6 +91,7 @@ namespace MoarUtils.Utils.GoogleAuth {
         hsc = HttpStatusCode.InternalServerError;
         status = "unexpected error";
       } finally {
+        m.clientSecret = null; //logging
         JsonConvert.SerializeObject(new {
           hsc,
           status,

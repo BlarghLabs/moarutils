@@ -78,7 +78,7 @@ namespace MoarUtils.Utils.GoogleAuth {
           return;
         }
 
-        content = response.Content;  
+        content = response.Content;
         dynamic json = JsonConvert.DeserializeObject(content);
 
         #region cheat sheet
@@ -96,18 +96,18 @@ namespace MoarUtils.Utils.GoogleAuth {
           ? null
           : json.email.Value
         ;
-        r.picture = json.picture == null 
-          ? null 
+        r.picture = json.picture == null
+          ? null
           : json.picture.Value
         ;
         r.id = json.id == null
           ? null
           : json.id.Value
-        ; 
+        ;
         r.verifiedEmail = json.verified_email == null
           ? false
           : json.verified_email.Value
-        ; 
+        ;
 
         hsc = HttpStatusCode.OK;
         return;
@@ -120,9 +120,12 @@ namespace MoarUtils.Utils.GoogleAuth {
         LogIt.I(JsonConvert.SerializeObject(new {
           hsc,
           status,
-          m,
-          content,
+          //m, //logging
+          //content, //logging
           //r,
+          r.email,
+          r.picture,
+          r.verifiedEmail,
         }, Formatting.Indented));
       }
     }
