@@ -15,7 +15,7 @@
     <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
     <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
     -->
-    <copyright>Copyright 2016</copyright>
+    <copyright>Copyright 2020</copyright>
     <tags>logit </tags>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework="net452" />
