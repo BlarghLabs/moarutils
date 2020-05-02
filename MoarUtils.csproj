@@ -130,6 +130,7 @@
     <Compile Include="commands\strings\RemoveHtmlComments.cs" />
     <Compile Include="commands\time\GetRelativeTime.cs" />
     <Compile Include="commands\web\GetExecutingUsername.cs" />
+    <Compile Include="commands\web\GetRawUrl.cs" />
     <Compile Include="commands\web\GetPublicIpAddress.cs" />
     <Compile Include="commands\web\UnauthenticatedUser.cs" />
     <Compile Include="commands\web\UserImpersonation.cs" />
