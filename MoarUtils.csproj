@@ -266,10 +266,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AWSSDK.Core">
-      <Version>3.3.103.35</Version>
+      <Version>3.3.106.16</Version>
     </PackageReference>
     <PackageReference Include="AWSSDK.S3">
-      <Version>3.3.110.58</Version>
+      <Version>3.3.110.62</Version>
     </PackageReference>
     <PackageReference Include="DotNetZip">
       <Version>1.13.3</Version>
