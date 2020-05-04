@@ -1,7 +1,7 @@
 ﻿using MoarUtils.commands.exceptions;
 using MoarUtils.commands.validation;
 using MoarUtils.enums;
-using MoarUtils.commands.logging;
+using MoarUtils.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -17,7 +17,6 @@ using System.Text;
 using System.Threading;
 using System.Timers;
 using System.Web;
-using MoarUtils.Utils;
 //using Twilio;
 
 //TODO: rewite this using trace and not filehandlers
