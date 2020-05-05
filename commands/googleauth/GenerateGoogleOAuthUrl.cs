@@ -10,7 +10,7 @@ namespace MoarUtils.Utils.GoogleAuth {
 
     public static string Execute(string clientId, string redirectUrl, string scopes) {
       //https://accounts.google.com/o/oauth2/auth?redirect_uri=https://developers.google.com/oauthplayground&response_type=code&client_id=XXX.apps.googleusercontent.com&scope=https://mail.google.com&approval_prompt=force&access_type=offline
-      string url = "https://accounts.google.com/o/oauth2/auth?"
+      var url = "https://accounts.google.com/o/oauth2/auth?"
         + "redirect_uri=" + UrlEncodeForGoogle(redirectUrl)
         + "&response_type=code"
         + "&client_id=" + clientId
@@ -30,6 +30,16 @@ namespace MoarUtils.Utils.GoogleAuth {
       //string state = "";
 
       //return string.Format(Url, scope, redirect_uri_encode, response_type, Globals.GoogleClientID, state);
+    }
+
+    public static string ExecuteNotOffline(string clientId, string redirectUrl, string scopes) {
+      var url = "https://accounts.google.com/o/oauth2/auth?"
+        + "redirect_uri=" + UrlEncodeForGoogle(redirectUrl)
+        + "&response_type=code"
+        + "&client_id=" + clientId
+        + "&scope=" + scopes
+      ;
+      return url;
     }
 
     public static string UrlEncodeForGoogle(string url) {
