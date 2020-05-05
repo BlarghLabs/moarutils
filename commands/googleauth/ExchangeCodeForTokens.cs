@@ -8,10 +8,14 @@ using System.Net;
 namespace MoarUtils.Utils.GoogleAuth {
   public class ExchangeCodeForTokens {
     public class request {
+      public request() {
+        includeEmptyScope = true;
+      }
       public string code { get; set; }
       public string clientId { get; set; }
       public string clientSecret { get; set; }
       public string redirectUrl { get; set; }
+      public bool includeEmptyScope { get; set; }
     }
 
     public class response {
@@ -54,7 +58,9 @@ namespace MoarUtils.Utils.GoogleAuth {
         request.AddParameter("code", m.code);
         request.AddParameter("redirect_uri", m.redirectUrl);
         request.AddParameter("client_id", m.clientId);
-        request.AddParameter("scope", "");
+        if (m.includeEmptyScope) {
+          request.AddParameter("scope", "");
+        }
         request.AddParameter("client_secret", m.clientSecret);
         request.AddParameter("grant_type", "authorization_code");
 
