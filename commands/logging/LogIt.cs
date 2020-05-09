@@ -27,7 +27,8 @@ namespace MoarUtils.commands.logging {
       Debug = 0,
       Info = 1,
       Warning = 2,
-      Error = 3
+      Error = 3,
+      Success = 4,
     }
 
     private static readonly LogIt instance = new LogIt();
@@ -186,7 +187,7 @@ namespace MoarUtils.commands.logging {
       if (!string.IsNullOrEmpty(logFileSubName) && !logFolderPath.EndsWith(logFileSubName)) {
         logFolderPath = Path.Combine(logFolderPath, (string.IsNullOrEmpty(logFileSubName) ? "" : logFileSubName));
       }
-      DirectoryInfo di = Directory.CreateDirectory(logFolderPath);
+      var di = Directory.CreateDirectory(logFolderPath);
       #endregion
 
       #region create log file
@@ -354,6 +355,9 @@ namespace MoarUtils.commands.logging {
 
     public static void I(object o) {
       Log(o, Severity.Info);
+    }
+    public static void S(object o) {
+      Log(o, Severity.Success);
     }
 
     public static void W(object o) {
@@ -548,6 +552,9 @@ namespace MoarUtils.commands.logging {
                 } else if (alBuffer[i].ToString().Contains("[WARNING]")) {
                   Console.ForegroundColor = ConsoleColor.Yellow;
                   Console.Error.WriteLine(alBuffer[i]); //maybe do error.writeline if we see [error]
+                } else if (alBuffer[i].ToString().Contains("[SUCCESS]")) {
+                  Console.ForegroundColor = ConsoleColor.Green;
+                  Console.WriteLine(alBuffer[i]); //maybe do error.writeline if we see [error]
                 } else {
                   Console.ForegroundColor = ConsoleColor.White;
                   Console.WriteLine(alBuffer[i]); //maybe do error.writeline if we see [error]

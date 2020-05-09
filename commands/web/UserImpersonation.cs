@@ -47,15 +47,15 @@ namespace MoarUtils.commands.web {
     /// <summary>
     /// Reverts the user impersonation.
     /// </summary>
-    public static void Deimpersonate() {
-      Deimpersonate(true);
+    public static string Deimpersonate() {
+      return Deimpersonate(true);
     }
 
     /// <summary>
     /// Reverts the user impersonation, optionally ignoring the previously set redirect url.
     /// </summary>
     /// <param name="redirect"></param>
-    public static void Deimpersonate(bool redirect) {
+    public static string Deimpersonate(bool redirect) {
       // Check if a HttpContext is available and a user is currently logged in.
       var context = HttpContext.Current;
       if (context == null)
@@ -63,16 +63,16 @@ namespace MoarUtils.commands.web {
 
       // Verify that a user is currently logged in.
       if (context.User.Identity == null)
-        return;
+        return null;
       if (!context.User.Identity.IsAuthenticated)
-        return;
+        return null;
 
       // Get data from auth ticket
       var formsIdentity = (FormsIdentity)context.User.Identity;
       if (string.IsNullOrEmpty(formsIdentity.Ticket.UserData))
-        return;
+        return null;
       if (!Deserialize(formsIdentity.Ticket.UserData, out string strUserName, out string strReturnUrl))
-        return;
+        return null;
 
       // Set new auth cookie and redirect user if asked to do so.
       FormsAuthentication.SetAuthCookie(strUserName, false);
@@ -81,8 +81,9 @@ namespace MoarUtils.commands.web {
         && redirect
       ) {
         context.Response.Redirect(strReturnUrl);
+        return strReturnUrl;
       }
-
+      return null;
     }
 
     /// <summary>
