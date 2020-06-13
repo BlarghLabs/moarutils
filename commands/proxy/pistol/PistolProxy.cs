@@ -1,19 +1,17 @@
 ﻿using MoarUtils.enums;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MoarUtils.Utils.Proxy {
-  public class PistolProxy {
+
+namespace MoarUtils.commands.proxy.pistol {
+  public class GetWebProxy {
+
     public const string PISTOL_PROXY_HOST = "bang.pistolproxy.com";
     public const int PISTOL_PROXY_PORT = 8008;
 
-    public static WebProxy GetWebProxy(
+    public static WebProxy Execute(
       DesiredProxyType dpt = DesiredProxyType.shared
-      //int defaultTimeoutSeconds = 5000
+    //int defaultTimeoutSeconds = 5000
     ) {
       var wp = new WebProxy(PISTOL_PROXY_HOST, PISTOL_PROXY_PORT);
       switch (dpt) {

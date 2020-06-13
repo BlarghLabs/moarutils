@@ -224,8 +224,8 @@
     <Compile Include="commands\Network.cs" />
     <Compile Include="commands\io\Files.cs" />
     <Compile Include="commands\owin\GetOwinContext.cs" />
-    <Compile Include="commands\proxy\KittenProxy.cs" />
-    <Compile Include="commands\proxy\PistolProxy.cs" />
+    <Compile Include="commands\proxy\kitten\KittenProxy.cs" />
+    <Compile Include="commands\proxy\pistol\PistolProxy.cs" />
     <Compile Include="commands\auth\Passwords.cs" />
     <Compile Include="commands\random\RandomStrings.cs" />
     <Compile Include="commands\random\RandomLists.cs" />

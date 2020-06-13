@@ -1,5 +1,4 @@
 ﻿using MoarUtils.commands.logging;
-using MoarUtils.Utils.Proxy;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -26,7 +25,7 @@ namespace MoarUtils.Utils.AutoRefreshedProxyList {
           //if we have some and then are <2 min old, then return them
           if (lastAggregatedUsableProxies < DateTime.UtcNow.AddMinutes(-20)) {
             //else, get new
-            _louwp = KittenProxy.GetUsableWebProxies(
+            _louwp = MoarUtils.commands.proxy.kitten.GetUsableWebProxies.Execute(
               apiHost: kittenProxyApiHost,
               apiKey: kittenProxyApiKey,
               anonymous: true,

@@ -4,11 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 
-namespace MoarUtils.Utils.Proxy {
-  public class KittenProxy {
+namespace MoarUtils.commands.proxy.kitten {
+  public class GetUsableWebProxies {
     public const int defaultMinimumUptimePercentage = 65;
 
-    public static List<WebProxy> GetUsableWebProxies(
+    public static List<WebProxy> Execute(
       string apiKey, 
       string apiHost,
       int minimumUptimePercentage = defaultMinimumUptimePercentage, 
