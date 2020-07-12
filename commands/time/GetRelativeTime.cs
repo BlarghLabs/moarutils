@@ -37,16 +37,21 @@ namespace MoarUtils.commands.time {
         return ts.Days + " days ago";
 
       if (delta < 12 * MONTH) {
+        //hack bc diff months have diff days
         var months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));
         var monthsDouble = (double)ts.Days / (double)30;
-        return monthsDouble <= 1 
-          ? "one month ago" 
+        var monthsDoubleString = monthsDouble.ToString("n1");
+        var x = monthsDouble <= 1
+          ? "one month ago"
           : (
-            monthsDouble.ToString("n1").EndsWith(".0")
-              ? months + " months ago"
-              : monthsDouble.ToString("n1") + " months ago"
-          )
-        ;
+            (
+              monthsDoubleString.EndsWith(".0")
+            )
+              //was: ? months + " months ago"
+              ? monthsDoubleString.Replace(".0", "") + " months ago"
+              : monthsDoubleString + " months ago"
+          );
+        return x;
       } else {
         var years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));
         var yearsDouble = (double)ts.Days / (double)365;
