@@ -115,8 +115,8 @@ namespace MoarUtils.commands.ipgeolocation.maxmind {
     }
 
     public static string GetCountryName(
-      string ip, 
-      bool throwOnError = false, 
+      string ip,
+      bool throwOnError = false,
       bool doNotWarnOnNotInDb = true
     ) {
       try {
@@ -155,8 +155,15 @@ namespace MoarUtils.commands.ipgeolocation.maxmind {
         }
       }
     }
-    public static CityResponse GetCityResponse(string ip, bool throwOnError = false, bool doNotWarnOnNotInDb = true) {
+    public static CityResponse GetCityResponse(
+      string ip, 
+      bool throwOnError = false, 
+      bool doNotWarnOnNotInDb = true
+    ) {
       try {
+        if (string.IsNullOrWhiteSpace(ip)){
+          return null;
+        }
         var cr = maxmindDr.City(ip);
         return cr;
       } catch (Exception ex) {
