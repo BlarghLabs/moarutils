@@ -4,7 +4,7 @@ using System.Net;
 
 namespace MoarUtils.commands.validation.ipaddresses {
   public class IsValidIpAddress {
-    public bool Execute(string input) {
+    public static bool Execute(string input) {
       try {
         IPAddress address;
         if (IPAddress.TryParse(input, out address)) {
