@@ -130,6 +130,8 @@
     <Compile Include="commands\strings\AnyTwoToOne.cs" />
     <Compile Include="commands\strings\RemoveHtmlComments.cs" />
     <Compile Include="commands\time\GetRelativeTime.cs" />
+    <Compile Include="commands\validation\ipaddresses\IsValidIpAddress.cs" />
+    <Compile Include="commands\validation\ipaddresses\IsValidIpV4.cs" />
     <Compile Include="commands\web\GetExecutingUsername.cs" />
     <Compile Include="commands\web\GetRawUrl.cs" />
     <Compile Include="commands\web\GetPublicIpAddress.cs" />
