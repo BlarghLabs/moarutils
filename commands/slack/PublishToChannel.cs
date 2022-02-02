@@ -44,7 +44,7 @@ namespace MoarUtils.Utils.Slack {
         var client = new RestClient(BASE);
         var request = new RestRequest {
           Resource = resource,
-          Method = Method.POST,
+          Method = Method.Post,
           RequestFormat = DataFormat.Json,
         };
         content = h + content.Replace("\"", "'");

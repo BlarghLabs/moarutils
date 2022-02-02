@@ -40,13 +40,14 @@ namespace MoarUtils.Utils.DisposableEmailCheck {
 
     public static List<string> AcquireDomainList() {
       try {
-        var response = new RestClient {
+        var client = new RestClient(new RestClientOptions {
           BaseUrl = new Uri("https://raw.githubusercontent.com/"),
           Timeout = 10000,
           UserAgent = "DisposableEmailCheck"
-        }.ExecuteAsync(new RestRequest {
+        });
+        var response = client.ExecuteAsync(new RestRequest {
           Resource = "ivolo/disposable-email-domains/master/index.json",
-          Method = Method.GET,
+          Method = Method.Get,
           //RequestFormat = RestSharp.DataFormat.Json
         }).Result;
         var content = response.Content;

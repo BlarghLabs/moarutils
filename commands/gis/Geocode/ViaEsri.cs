@@ -55,7 +55,7 @@ namespace moarutils.utils.gis.geocode {
         var client = new RestClient("https://geocode.arcgis.com/");
         var request = new RestRequest(
           resource: resource,
-          method: Method.GET
+          method: Method.Get
         );
         //if (wp != null) {
         //  client.Proxy = wp;

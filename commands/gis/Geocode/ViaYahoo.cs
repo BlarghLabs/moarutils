@@ -58,7 +58,7 @@ namespace moarutils.utils.gis.geocode {
         //if (wp != null) {
         //  client.Proxy = wp;
         //}
-        var request = new RestRequest(GetYQLUrlSecondPart(location), Method.GET);
+        var request = new RestRequest(GetYQLUrlSecondPart(location), Method.Get);
         request.RequestFormat = DataFormat.Json;
         var response = client.ExecuteAsync(request).Result;
 

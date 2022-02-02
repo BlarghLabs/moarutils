@@ -44,14 +44,14 @@ namespace MoarUtils.Utils.GoogleAuth {
       status = "";
       hsc = HttpStatusCode.BadRequest;
       try {
-        var client = new RestClient{
+        var client = new RestClient(new RestClientOptions{
           BaseUrl = new Uri("https://accounts.google.com"),
-        };
+        });
         //https://developers.google.com/accounts/docs/OAuth2WebServer
         //#Using a Refresh Token
         var request = new RestRequest {
           Resource = "o/oauth2/token",
-          Method = Method.POST,
+          Method = Method.Post,
         };
         request.AddParameter("client_id", m.clientId);
         request.AddParameter("client_secret", m.clientSecret);

@@ -57,7 +57,7 @@ namespace moarutils.utils.gis.geocode {
         var client = new RestClient("https://api.geocod.io/v1.4/");
         var request = new RestRequest(
           resource: resource,
-          method: Method.GET
+          method: Method.Get
         );
         //if (wp != null) {
         //  client.Proxy = wp;

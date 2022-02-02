@@ -35,7 +35,7 @@ namespace moarutils.utils.gis.geocode {
           var client = new RestClient("https://www.mapquestapi.com/");
           var request = new RestRequest(
             resource: "/geocoding/v1/address?key=" + key + "&location=" + uea,
-            method: Method.GET
+            method: Method.Get
           );
           //if (wp != null) {
           //  client.Proxy = wp;

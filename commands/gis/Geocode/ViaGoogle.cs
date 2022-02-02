@@ -85,7 +85,7 @@ namespace moarutils.utils.gis.geocode {
           var client = new RestClient("https://maps.googleapis.com/");
           var request = new RestRequest(
             resource: GetUrlSecondPart(address, key),
-            method: Method.GET
+            method: Method.Get
             //dataFormat: DataFormat.Json
           );
           //if (wp != null) {

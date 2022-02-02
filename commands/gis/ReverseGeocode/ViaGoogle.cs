@@ -18,7 +18,7 @@ namespace moarutils.utils.gis.reversegeocode {
       try {
         var resource = "maps/api/geocode/json?latlng=" + lat.ToString() + "," + lng.ToString() + "&key=" + apiKey;
         var client = new RestClient("https://maps.googleapis.com/");
-        var request = new RestRequest(resource, Method.GET);
+        var request = new RestRequest(resource, Method.Get);
         request.RequestFormat = DataFormat.Json;
         var response = client.ExecuteAsync(request).Result;
         if (response.ErrorException != null) {
