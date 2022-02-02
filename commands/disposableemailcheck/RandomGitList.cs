@@ -44,11 +44,11 @@ namespace MoarUtils.Utils.DisposableEmailCheck {
           BaseUrl = new Uri("https://raw.githubusercontent.com/"),
           Timeout = 10000,
           UserAgent = "DisposableEmailCheck"
-        }.Execute(new RestRequest {
+        }.ExecuteAsync(new RestRequest {
           Resource = "ivolo/disposable-email-domains/master/index.json",
-          Method = Method.Get,
+          Method = Method.GET,
           //RequestFormat = RestSharp.DataFormat.Json
-        });
+        }).Result;
         var content = response.Content;
         content = "{\"List\":" + content + "}";
         dynamic json = Newtonsoft.Json.Linq.JObject.Parse(content);

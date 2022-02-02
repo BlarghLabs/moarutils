@@ -85,12 +85,12 @@ namespace moarutils.utils.gis.geocode {
           var client = new RestClient("https://maps.googleapis.com/");
           var request = new RestRequest(
             resource: GetUrlSecondPart(address, key),
-            method: Method.Get,
-            dataFormat: DataFormat.Json
+            method: Method.GET
+            //dataFormat: DataFormat.Json
           );
-          if (wp != null) {
-            client.Proxy = wp;
-          }
+          //if (wp != null) {
+          //  client.Proxy = wp;
+          //}
           var response = client.ExecuteAsync(request).Result;
           if (response.ErrorException != null) {
             status = $"response had error exception: {response.ErrorException.Message}";

@@ -39,7 +39,7 @@ namespace MoarUtils.Utils.GoogleAuth {
         }
 
         var client = new RestClient("https://www.googleapis.com/");
-        var request = new RestRequest("oauth2/v2/userinfo", Method.Get);
+        var request = new RestRequest("oauth2/v2/userinfo", Method.GET);
         request.AddHeader("Authorization", "Bearer " + m.accessToken); //Authorization: Bearer XXX
         var response = client.ExecuteAsync(request).Result;
 

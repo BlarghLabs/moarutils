@@ -6,15 +6,15 @@ namespace MoarUtils.Utils.DisposableEmailCheck {
   public class BlockDisposableEmail {
     public static bool IsDisposable(string email, string apiKey) {
       try {
-        var client = new RestClient(new RestClientOptions {
+        var client = new RestClient {
           BaseUrl = new Uri("http://check.block-disposable-email.com/"),
           Timeout = 5000
-        });
-        var response = client.Execute(new RestRequest {
+        };
+        var response = client.ExecuteAsync(new RestRequest {
           Resource = "easyapi/json/" + apiKey + "/" + email,
-          Method = Method.Get,
+          Method = Method.GET,
           //RequestFormat = RestSharp.DataFormat.Json
-        });
+        }).Result;
         var content = response.Content;
         dynamic json = Newtonsoft.Json.Linq.JObject.Parse(content);
 

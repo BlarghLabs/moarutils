@@ -55,10 +55,10 @@ namespace moarutils.utils.gis.geocode {
         //Cert.IgnoreInvalidCerts();
 
         var client = new RestClient("https://query.yahooapis.com/");
-        if (wp != null) {
-          client.Proxy = wp;
-        }
-        var request = new RestRequest(GetYQLUrlSecondPart(location), Method.Get);
+        //if (wp != null) {
+        //  client.Proxy = wp;
+        //}
+        var request = new RestRequest(GetYQLUrlSecondPart(location), Method.GET);
         request.RequestFormat = DataFormat.Json;
         var response = client.ExecuteAsync(request).Result;
 
@@ -71,7 +71,7 @@ namespace moarutils.utils.gis.geocode {
             LogIt.W(response.StatusCode.ToString());
           }
           //try again
-          response = client.Execute(request);
+          response = client.ExecuteAsync(request).Result;
           attempts++;
           if ((attempts > 2) && ((response.ErrorException != null) || (response.StatusCode != HttpStatusCode.OK))) {
             if (response.ErrorException != null) {

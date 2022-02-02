@@ -53,7 +53,7 @@ namespace MoarUtils.Utils.GoogleAuth {
 
         //code=XXX&redirect_uri=https%3A%2F%2Fdevelopers.google.com%2Foauthplayground&client_id=XXX.apps.googleusercontent.com&scope=&client_secret=************&grant_type=authorization_code
 
-        var request = new RestRequest("o/oauth2/token", Method.Post);
+        var request = new RestRequest("o/oauth2/token", Method.POST);
         request.AddParameter("Content-Type", "application/x-www-form-urlencoded");
         request.AddParameter("code", m.code);
         request.AddParameter("redirect_uri", m.redirectUrl);

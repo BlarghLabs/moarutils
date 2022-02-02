@@ -20,7 +20,7 @@ namespace MoarUtils.commands.proxy.kitten {
       try {
         Utils.Cert.IgnoreInvalidCerts(); //only req while self signed
         var rc = new RestClient(apiHost);
-        var rr = rc.Execute(
+        var rr = rc.ExecuteAsync(
           new RestRequest {
             Resource = "api/Proxy/get?apiKey=" + apiKey 
                         + "&limitProxyTypes=" + limitProxyTypes
@@ -30,9 +30,9 @@ namespace MoarUtils.commands.proxy.kitten {
                         + "&active=true"
                         + "&minLatency=" + minLatencySeconds
                         + (!anonymous ? "" : "&anonymous=true"),
-            Method = Method.Get,
+            Method = Method.GET,
             RequestFormat = DataFormat.Json,
-          });
+          }).Result;
         if (rr.ErrorException != null) {
           throw rr.ErrorException;
         }
