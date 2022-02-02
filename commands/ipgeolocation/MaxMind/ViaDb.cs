@@ -164,6 +164,9 @@ namespace MoarUtils.commands.ipgeolocation.maxmind {
         if (string.IsNullOrWhiteSpace(ip)){
           return null;
         }
+        if (ip == "::1") {
+          return null;
+        }
         var cr = maxmindDr.City(ip);
         return cr;
       } catch (Exception ex) {

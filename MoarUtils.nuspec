@@ -50,7 +50,7 @@
       <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.6" />
       <dependency id="Microsoft.AspNet.WebPages" version="3.2.6" />
       <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
-      <dependency id="Newtonsoft.Json" version="12.0.2" />
+      <!--<dependency id="Newtonsoft.Json" version="12.0.2" />-->
       <dependency id="ObjectDumper" version="1.0.0.12" />
       <dependency id="RestSharp" version="106.6.9" />
     </dependencies>

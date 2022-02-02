@@ -30,7 +30,7 @@ namespace MoarUtils.commands.proxy.kitten {
                         + "&active=true"
                         + "&minLatency=" + minLatencySeconds
                         + (!anonymous ? "" : "&anonymous=true"),
-            Method = Method.GET,
+            Method = Method.Get,
             RequestFormat = DataFormat.Json,
           });
         if (rr.ErrorException != null) {

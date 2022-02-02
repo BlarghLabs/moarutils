@@ -46,7 +46,7 @@ namespace MoarUtils.Utils.DisposableEmailCheck {
           UserAgent = "DisposableEmailCheck"
         }.Execute(new RestRequest {
           Resource = "ivolo/disposable-email-domains/master/index.json",
-          Method = Method.GET,
+          Method = Method.Get,
           //RequestFormat = RestSharp.DataFormat.Json
         });
         var content = response.Content;

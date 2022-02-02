@@ -114,7 +114,7 @@ namespace MoarUtils.Utils.Telephony {
 //    }.Execute(new RestRequest {
 //      //Resource = "yangsu/hackduke/master/sampleapps/areacode.json",
 //      Resource = "kedarmhaswade/cities/master/area-codes.csv",
-//      Method = Method.GET,
+//      Method = Method.Get,
 //      //RequestFormat = RestSharp.DataFormat.Json
 //    });
 //    var content = response.Content;

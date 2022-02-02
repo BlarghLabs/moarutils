@@ -124,6 +124,7 @@
     <Compile Include="commands\gis\geocode\ViaGeocodio.cs" />
     <Compile Include="commands\googleauth\GetUserInfoFromAccessToken.cs" />
     <Compile Include="commands\lists\SplitList.cs" />
+    <Compile Include="commands\strings\StringCompression.cs" />
     <Compile Include="commands\strings\StripStrFromBegAndEnd.cs" />
     <Compile Include="commands\strings\Truncate.cs" />
     <Compile Include="commands\strings\CondenseWhiteSpace.cs" />
@@ -293,13 +294,13 @@
       <Version>1.30.0.1041</Version>
     </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.37</Version>
+      <Version>1.6.5</Version>
     </PackageReference>
     <PackageReference Include="JWT">
       <Version>2.4.2</Version>
     </PackageReference>
     <PackageReference Include="libphonenumber-csharp">
-      <Version>8.12.34</Version>
+      <Version>8.12.38</Version>
     </PackageReference>
     <PackageReference Include="MaxMind.Db">
       <Version>2.3.0</Version>
@@ -344,7 +345,7 @@
       <Version>1.0.0</Version>
     </PackageReference>
     <PackageReference Include="RestSharp">
-      <Version>106.12.0</Version>
+      <Version>107.1.2</Version>
     </PackageReference>
     <PackageReference Include="System.Net.Http">
       <Version>4.3.4</Version>

@@ -22,11 +22,11 @@ namespace MoarUtils.Utils.Telephony.ReversePhoneLookup {
         var client = new RestClient(BASE);
         var request = new RestRequest {
           Resource = resource,
-          Method = Method.GET,
+          Method = Method.Get,
           RequestFormat = DataFormat.Json,
         };
 
-        var response = client.Execute(request);
+        var response = client.ExecuteAsync(request).Result;
         var content = response.Content;
         if (response.ErrorException != null) {
           throw response.ErrorException;

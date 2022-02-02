@@ -58,9 +58,9 @@ namespace moarutils.utils.gis.geocode {
         if (wp != null) {
           client.Proxy = wp;
         }
-        var request = new RestRequest(GetYQLUrlSecondPart(location), Method.GET);
+        var request = new RestRequest(GetYQLUrlSecondPart(location), Method.Get);
         request.RequestFormat = DataFormat.Json;
-        var response = client.Execute(request);
+        var response = client.ExecuteAsync(request).Result;
 
         #region try again if response code not valid or exception found
         int attempts = 0;

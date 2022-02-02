@@ -57,12 +57,12 @@ namespace moarutils.utils.gis.geocode {
         var client = new RestClient("https://api.geocod.io/v1.4/");
         var request = new RestRequest(
           resource: resource,
-          method: Method.GET
+          method: Method.Get
         );
         if (wp != null) {
           client.Proxy = wp;
         }
-        var response = client.Execute(request);
+        var response = client.ExecuteAsync(request).Result;
 
         if (response.ErrorException != null) {
           status = $"response had error exception: {response.ErrorException.Message}";

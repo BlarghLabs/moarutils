@@ -51,14 +51,14 @@ namespace MoarUtils.Utils.GoogleAuth {
         //#Using a Refresh Token
         var request = new RestRequest {
           Resource = "o/oauth2/token",
-          Method = Method.POST,
+          Method = Method.Post,
         };
         request.AddParameter("client_id", m.clientId);
         request.AddParameter("client_secret", m.clientSecret);
         request.AddParameter("refresh_token", m.refreshToken);
         request.AddParameter("grant_type", "refresh_token");
         request.AddParameter("Content-Type", "application/x-www-form-urlencoded");
-        var response = client.Execute(request);
+        var response = client.ExecuteAsync(request).Result;
         //valid response: { "access_token":"1/XXX", "expires_in":3920, "token_type":"Bearer",}
         if (response.StatusCode != HttpStatusCode.OK) {
           status = "Unable to get new access token: " + response.StatusCode.ToString() + "|" + response.Content;
