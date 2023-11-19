@@ -42,7 +42,8 @@ namespace MoarUtils.Utils.DisposableEmailCheck {
       try {
         var client = new RestClient(new RestClientOptions {
           BaseUrl = new Uri("https://raw.githubusercontent.com/"),
-          Timeout = 10000,
+          //Timeout = 10000,
+          MaxTimeout = 10000,
           UserAgent = "DisposableEmailCheck"
         });
         var response = client.ExecuteAsync(new RestRequest {

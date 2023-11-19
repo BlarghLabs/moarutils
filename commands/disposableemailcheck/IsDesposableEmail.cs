@@ -8,7 +8,8 @@ namespace MoarUtils.Utils.DisposableEmailCheck {
       try {
         var client = new RestClient (new RestClientOptions{
           BaseUrl = new Uri("http://check.block-disposable-email.com/"),
-          Timeout = 5000
+          MaxTimeout = 5000
+          //Timeout = 5000
         });
         var response = client.ExecuteAsync(new RestRequest {
           Resource = "easyapi/json/" + apiKey + "/" + email,

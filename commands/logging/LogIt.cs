@@ -298,7 +298,7 @@ namespace MoarUtils.commands.logging {
           }
 
           var json = JsonConvert.SerializeObject(error, Formatting.Indented);
-         Log(json, Severity.Error, fireEmailAsWell);
+          Log(json, Severity.Error, fireEmailAsWell);
         }
       } catch {
         Console.Error.WriteLine("I messed up, this all should be safe from exception");
